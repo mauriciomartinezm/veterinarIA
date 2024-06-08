@@ -17,7 +17,6 @@ void main() {
   );
 }
 
-//sdnvojdsvn
 class Miapp extends StatelessWidget {
   Miapp({super.key});
 
