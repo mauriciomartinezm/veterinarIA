@@ -96,25 +96,26 @@ class FotoPerfil extends StatelessWidget {
 }
 
 Widget saludo(BuildContext context) {
-  var userProvider = Provider.of<UserProvider>(context);
-  var user = userProvider.user;
-  String nombre = user!.primnombre;
+  // var userProvider = Provider.of<UserProvider>(context);
+  // var user = userProvider.user;
+  // String nombre = user!.primnombre;
 
-  return Positioned(
+  return const Positioned(
     left: 160,
     top: 75,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "Hola,",
           style: TextStyle(fontSize: 25),
         ),
         Text(
-          nombre,
-          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          "nombre",
+          // nombre,
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
-        const Text(
+        Text(
           "Es un gusto tenerte por aquí",
           style: TextStyle(fontSize: 15),
         ),

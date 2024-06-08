@@ -102,6 +102,8 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
+          filled: true,
+          fillColor: Colors.white,
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {

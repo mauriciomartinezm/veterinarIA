@@ -77,7 +77,7 @@ Widget campoNombre(TextEditingController controller) {
         fillColor: Colors.white,
         filled: true,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
+          borderRadius: BorderRadius.circular(15.0),
           borderSide: const BorderSide(
             color: Colors.grey,
           ),
@@ -98,7 +98,7 @@ Widget campoApellidos(TextEditingController controller) {
         fillColor: Colors.white,
         filled: true,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
+          borderRadius: BorderRadius.circular(15.0),
           borderSide: const BorderSide(
             color: Colors.grey,
           ),
@@ -119,7 +119,7 @@ Widget campoCorreo(TextEditingController controller) {
         fillColor: Colors.white,
         filled: true,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
+          borderRadius: BorderRadius.circular(15.0),
           borderSide: const BorderSide(
             color: Colors.grey,
           ),
@@ -141,7 +141,7 @@ Widget campoContrasena(TextEditingController controller) {
         fillColor: Colors.white,
         filled: true,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
+          borderRadius: BorderRadius.circular(15.0),
           borderSide: const BorderSide(
             color: Colors.grey,
           ),

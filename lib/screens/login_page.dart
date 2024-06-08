@@ -95,16 +95,9 @@ class _LoginPageState extends State<LoginPage> {
           fillColor: Colors.white,
           filled: true,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0),
+            borderRadius: BorderRadius.circular(15.0),
             borderSide: const BorderSide(
               color: Colors.grey,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0),
-            borderSide: const BorderSide(
-              color: Color.fromARGB(255, 128, 37, 37),
-              width: 2.0,
             ),
           ),
           prefixIcon: const Icon(Icons.person),
@@ -136,16 +129,9 @@ class _LoginPageState extends State<LoginPage> {
           fillColor: Colors.white,
           filled: true,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0),
+            borderRadius: BorderRadius.circular(15.0),
             borderSide: const BorderSide(
               color: Colors.blueAccent,
-              width: 2.0,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0),
-            borderSide: const BorderSide(
-              color: Color.fromARGB(255, 128, 37, 37),
               width: 2.0,
             ),
           ),
@@ -187,7 +173,19 @@ class _LoginPageState extends State<LoginPage> {
         var response = await loginUser(cedula, password);
         // Manejo de la respuesta
         if (response.containsKey('messageSuccess')) {
-          var user = User(cedula: response['user']['Cedula'], contrasena: response['user']['Contrasena'], primnombre: response['user']['PrimNombre'], segnombre: response['user']['SegNombre'], primapellido: response['user']['PrimApellido'], segapellido: response['user']['SegApellido'], idsexo: response['user']['IDSexo'], direccion: response['user']['Direccion'], idmunicipio: response['user']['IDMunicipio'], iddepto: response['user']['IDDepto'], celular: response['user']['TelCel'], correoe: response['user']['CorreoE']);
+          var user = User(
+              cedula: response['user']['Cedula'],
+              contrasena: response['user']['Contrasena'],
+              primnombre: response['user']['PrimNombre'],
+              segnombre: response['user']['SegNombre'],
+              primapellido: response['user']['PrimApellido'],
+              segapellido: response['user']['SegApellido'],
+              idsexo: response['user']['IDSexo'],
+              direccion: response['user']['Direccion'],
+              idmunicipio: response['user']['IDMunicipio'],
+              iddepto: response['user']['IDDepto'],
+              celular: response['user']['TelCel'],
+              correoe: response['user']['CorreoE']);
           userProvider.login(user);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Loggeado")),

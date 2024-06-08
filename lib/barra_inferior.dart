@@ -54,16 +54,58 @@ class MiBottomAppBar extends StatelessWidget {
             ),
             onPressed: disabledButton != 3
                 ? () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Cerraste sesión")),
-                    );
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()),
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text(
+                            "Despidete bien",
+                            style: TextStyle(
+                                color: Color.fromRGBO(221, 166, 101, 1),
+                                fontSize: 25.0,
+                                fontWeight: FontWeight.w700),
+                          ),
+                          content: const Text("¿Salir de tu cuenta?"),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text(
+                                "Cancelar",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15.0,
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: const Text(
+                                "Salir",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15.0,
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Cerraste sesión")),
+                                );
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const LoginPage()),
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      },
                     );
                   }
-                : null, //Deshabilita la viejita si disabledButton es igual a 3
+                : null, //Deshabilita l si disabledButton es igual a 3
           ),
         ],
       ),

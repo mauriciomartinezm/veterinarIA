@@ -58,8 +58,7 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
             _buildTextFormField(_primerNombreController, 'Primer Nombre'),
             _buildTextFormField(_segundoNombreController, 'Segundo Nombre'),
             _buildTextFormField(_primerApellidoController, 'Primer Apellido'),
-            _buildTextFormField(
-                _segundoApellidoController, 'Segundo Apellido'),
+            _buildTextFormField(_segundoApellidoController, 'Segundo Apellido'),
             _buildTextFormField(_sexoController, 'Sexo'),
             _buildTextFormField(_direccionController, 'Dirección'),
             _buildTextFormField(_municipioController, 'Municipio'),
@@ -108,6 +107,8 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
+          filled: true,
+          fillColor: Colors.white,
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {

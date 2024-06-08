@@ -4,7 +4,7 @@ import 'package:prueba1/provider/userProvider.dart';
 import "screens/login_page.dart";
 import 'screens/register_page.dart';
 import 'screens/home/home_page.dart';
-import 'screens/home/info_page.dart'; 
+import 'screens/home/info_page.dart';
 import 'screens/home/info_usuario_page.dart';
 import 'screens/home/info_mascota_page.dart';
 
@@ -35,7 +35,7 @@ class Miapp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Mi app",
       routes: _routes,
-      initialRoute: 'login',
+      initialRoute: 'home',
     );
   }
 }
