@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prueba1/screens/home/mascotas_page.dart';  // Importa la nueva página
+import 'package:prueba1/screens/home/mascotas_page.dart';
 import '../../barra_inferior.dart';
 import 'info_usuario_page.dart';
 
@@ -25,16 +25,16 @@ Widget cuerpo(BuildContext context) {
     ),
     child: Column(
       children: [
-        const SizedBox(height: 100), // Espacio superior
+        const SizedBox(height: 100), //Espacio superior
         info(),
-        const SizedBox(height: 50), // Espacio entre el título y los botones
+        const SizedBox(height: 50), //Espacio entre el título y los botones
         Expanded(
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 botonMisMascotas(context),
-                const SizedBox(height: 40), // Espacio entre los botones
+                const SizedBox(height: 40), //Espacio entre los botones
                 botonMiInfo(context),
               ],
             ),

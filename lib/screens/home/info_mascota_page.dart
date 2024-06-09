@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class InfoMascotaPage extends StatefulWidget {
   final String nombre;
 
-  const InfoMascotaPage({Key? key, required this.nombre}) : super(key: key);
+  const InfoMascotaPage({super.key, required this.nombre});
 
   @override
   State<InfoMascotaPage> createState() => _InfoMascotaPageState();
@@ -70,7 +70,7 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Nombre de la mascota',
+          "Nombre de la mascota",
           style: TextStyle(
             color: Colors.black,
             fontSize: 20.0,
@@ -96,12 +96,12 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
           key: _formKey,
           child: Column(
             children: [
-              _buildTextFormField(_nombreController, 'Nombre', isRequired: true),
-              _buildTextFormField(_fechaController, 'Fecha de nacimiento'),
-              _buildTextFormField(_fechaIngresoController, 'Fecha de ingreso'),
-              _buildTextFormField(_estadoController, 'Estado'),
-              _buildTextFormField(_fechaSalidaController, 'Fecha de salida'),
-              _buildTextFormField(_tipoSalidaController, 'Tipo de salida'),
+              _buildTextFormField(_nombreController, "Nombre", isRequired: true),
+              _buildTextFormField(_fechaController, "Fecha de nacimiento"),
+              _buildTextFormField(_fechaIngresoController, "Fecha de ingreso"),
+              _buildTextFormField(_estadoController, "Estado"),
+              _buildTextFormField(_fechaSalidaController, "Fecha de salida"),
+              _buildTextFormField(_tipoSalidaController, "Tipo de salida"),
               especie(),
               familia(),
               genero(),
@@ -121,7 +121,7 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
       children: [
         const SizedBox(height: 20),
         const Text(
-          'Foto de la mascota',
+          "Foto de la mascota",
           style: TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -130,7 +130,7 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
         ),
         GestureDetector(
           onTap: () {
-            // Lógica para seleccionar la imagen
+            // No se como pero aqui va la logica para seleccionar la iamgen
           },
           child: Container(
             width: double.infinity,
@@ -165,11 +165,11 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
         if (_formKey.currentState!.validate()) {
           // Aquí va la comunicación con esa mondá
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Información guardada')),
+            const SnackBar(content: Text("Información guardada")),
           );
         }
       },
-      child: const Text('Actualizar', style: TextStyle(fontSize: 18)),
+      child: const Text("Actualizar", style: TextStyle(fontSize: 18)),
     );
   }
 
@@ -190,7 +190,7 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
         ),
         validator: (value) {
           if (isRequired && (value == null || value.isEmpty)) {
-            return 'Por favor ingrese su $label';
+            return "Por favor ingrese su $label";
           }
           return null;
         },
@@ -203,7 +203,7 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: DropdownButtonFormField<String>(
         decoration: InputDecoration(
-          labelText: 'Familia',
+          labelText: "Familia",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
@@ -226,7 +226,7 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
         }).toList(),
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Por favor seleccione una opción para la familia';
+            return "Por favor seleccione una opción para la familia";
           }
           return null;
         },
@@ -239,7 +239,7 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: DropdownButtonFormField<String>(
         decoration: InputDecoration(
-          labelText: 'Especie',
+          labelText: "Especie",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
@@ -261,7 +261,7 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
         }).toList(),
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Por favor seleccione una opción para la especie';
+            return "Por favor seleccione una opción para la especie";
           }
           return null;
         },
@@ -274,7 +274,7 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: DropdownButtonFormField<String>(
         decoration: InputDecoration(
-          labelText: 'Género',
+          labelText: "Género",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
@@ -296,7 +296,7 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
         }).toList(),
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Por favor seleccione una opción para el género';
+            return "Por favor seleccione una opción para el género";
           }
           return null;
         },
@@ -309,7 +309,7 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: DropdownButtonFormField<String>(
         decoration: InputDecoration(
-          labelText: 'Sexo',
+          labelText: "Sexo", //por favor
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
@@ -330,7 +330,7 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
         }).toList(),
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Por favor seleccione una opción para el sexo';
+            return "Por favor seleccione una opción para el sexo";
           }
           return null;
         },

@@ -27,7 +27,7 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Mi información',
+          "Mi información",
           style: TextStyle(
               color: Color.fromRGBO(221, 166, 101, 1),
               fontSize: 25.0,
@@ -52,10 +52,10 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
         child: Form(
           key: _formKey,
           child: Column(children: [
-            _buildTextFormField(_cedulaController, 'Cédula'),
-            _buildTextFormField(_contrasenaController, 'Contraseña',
+            _buildTextFormField(_cedulaController, "Cédula"),
+            _buildTextFormField(_contrasenaController, "Contraseña",
                 isPassword: true),
-            _buildTextFormField(_primerNombreController, 'Primer Nombre'),
+            _buildTextFormField(_primerNombreController, "Primer Nombre"),
             _buildTextFormField(_segundoNombreController, 'Segundo Nombre'),
             _buildTextFormField(_primerApellidoController, 'Primer Apellido'),
             _buildTextFormField(_segundoApellidoController, 'Segundo Apellido'),
@@ -112,7 +112,7 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Por favor ingrese su $label';
+            return "Por favor ingrese su $label";
           }
           return null;
         },
