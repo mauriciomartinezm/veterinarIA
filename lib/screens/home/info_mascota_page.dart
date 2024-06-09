@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class InfoMascotaPage extends StatefulWidget {
-  const InfoMascotaPage({super.key});
+  final String nombre;
+
+  const InfoMascotaPage({Key? key, required this.nombre}) : super(key: key);
 
   @override
   State<InfoMascotaPage> createState() => _InfoMascotaPageState();
@@ -20,16 +22,59 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
   final _fechaSalidaController = TextEditingController();
   final _tipoSalidaController = TextEditingController();
 
+  final List<String> opcionesFamilia = [
+    "Serpientes",
+    "Lagartos",
+    "Tortugas",
+    "Perros",
+    "Gatos",
+    "Ardillas",
+    "Loros",
+    "Pericos",
+    "Patos",
+  ];
+
+  final List<String> opcionesEspecie = [
+    "Mamiferos",
+    "Aves",
+    "Reptiles",
+  ];
+
+  final List<String> opcionesGenero = [
+    "Viboras",
+    "Tarentola",
+    "Geochelone",
+    "Canis",
+    "Felis",
+    "Scirius vulgaris",
+    "Psittacoidea",
+    "Melopsittacus undulatis",
+    "Anas",
+  ];
+
+  final List<String> opcionesSexo = [
+    "Masculino",
+    "Femenino",
+  ];
+
+  String? _selectedImage;
+
+  @override
+  void initState() {
+    super.initState();
+    _nombreController.text = widget.nombre;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Mis mascotas',
+          'Nombre de la mascota',
           style: TextStyle(
-              color: Color.fromRGBO(221, 166, 101, 1),
-              fontSize: 25.0,
-              fontWeight: FontWeight.w700),
+            color: Colors.black,
+            fontSize: 20.0,
+          ),
         ),
         backgroundColor: Colors.white,
       ),
@@ -49,21 +94,59 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(children: [
-            _buildTextFormField(_nombreController, 'Nombre'),
-            _buildTextFormField(_especieController, 'Especie'),
-            _buildTextFormField(_familiaController, 'Familia'),
-            _buildTextFormField(_generoController, 'Genero'),
-            _buildTextFormField(_fechaController, 'Fecha de nacimiento'),
-            _buildTextFormField(_sexoController, 'Sexo'),
-            _buildTextFormField(_fechaIngresoController, 'Fecha de ingreso'),
-            _buildTextFormField(_estadoController, 'Estado'),
-            _buildTextFormField(_fechaSalidaController, 'Fecha de salida'),
-            _buildTextFormField(_tipoSalidaController, 'Tipo de salida'),
-            botonActualizar(context),
-          ]),
+          child: Column(
+            children: [
+              _buildTextFormField(_nombreController, 'Nombre', isRequired: true),
+              _buildTextFormField(_fechaController, 'Fecha de nacimiento'),
+              _buildTextFormField(_fechaIngresoController, 'Fecha de ingreso'),
+              _buildTextFormField(_estadoController, 'Estado'),
+              _buildTextFormField(_fechaSalidaController, 'Fecha de salida'),
+              _buildTextFormField(_tipoSalidaController, 'Tipo de salida'),
+              especie(),
+              familia(),
+              genero(),
+              sexo(),
+              _buildImagePicker(),
+              botonActualizar(context),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildImagePicker() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 20),
+        const Text(
+          'Foto de la mascota',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            // Lógica para seleccionar la imagen
+          },
+          child: Container(
+            width: double.infinity,
+            height: 150,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Center(
+              child: _selectedImage == null
+                  ? const Icon(Icons.camera_alt, size: 50, color: Colors.grey)
+                  : Image.asset(_selectedImage!),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -80,7 +163,7 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
       ),
       onPressed: () {
         if (_formKey.currentState!.validate()) {
-          //aqui va la comunicacion con la api Mauro
+          // Aquí va la comunicación con esa mondá
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Información guardada')),
           );
@@ -91,7 +174,7 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
   }
 
   Widget _buildTextFormField(TextEditingController controller, String label,
-      {bool isPassword = false}) {
+      {bool isPassword = false, bool isRequired = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: TextFormField(
@@ -106,8 +189,148 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
           fillColor: Colors.white,
         ),
         validator: (value) {
-          if (value == null || value.isEmpty) {
+          if (isRequired && (value == null || value.isEmpty)) {
             return 'Por favor ingrese su $label';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget familia() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          labelText: 'Familia',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+        ),
+       
+        value:
+            _familiaController.text.isNotEmpty ? _familiaController.text : null,
+        onChanged: (String? newValue) {
+          setState(() {
+            _familiaController.text = newValue ?? '';
+          });
+        },
+        items: opcionesFamilia.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Por favor seleccione una opción para la familia';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget especie() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          labelText: 'Especie',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+        ),
+        value:
+            _especieController.text.isNotEmpty ? _especieController.text : null,
+        onChanged: (String? newValue) {
+          setState(() {
+            _especieController.text = newValue ?? '';
+          });
+        },
+        items: opcionesEspecie.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Por favor seleccione una opción para la especie';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget genero() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          labelText: 'Género',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+        ),
+        value:
+            _generoController.text.isNotEmpty ? _generoController.text : null,
+        onChanged: (String? newValue) {
+          setState(() {
+            _generoController.text = newValue ?? '';
+          });
+        },
+        items: opcionesGenero.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Por favor seleccione una opción para el género';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget sexo() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          labelText: 'Sexo',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+        ),
+        value: _sexoController.text.isNotEmpty ? _sexoController.text : null,
+        onChanged: (String? newValue) {
+          setState(() {
+            _sexoController.text = newValue ?? '';
+          });
+        },
+        items: opcionesSexo.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Por favor seleccione una opción para el sexo';
           }
           return null;
         },
@@ -117,8 +340,16 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
 
   @override
   void dispose() {
+    _nombreController.dispose();
+    _especieController.dispose();
+    _familiaController.dispose();
+    _generoController.dispose();
+    _fechaController.dispose();
     _sexoController.dispose();
-
+    _fechaIngresoController.dispose();
+    _estadoController.dispose();
+    _fechaSalidaController.dispose();
+    _tipoSalidaController.dispose();
     super.dispose();
   }
 }

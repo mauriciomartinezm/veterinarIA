@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prueba1/screens/home/info_mascota_page.dart';
+import 'package:prueba1/screens/home/mascotas_page.dart';  // Importa la nueva página
 import '../../barra_inferior.dart';
 import 'info_usuario_page.dart';
 
@@ -10,8 +10,7 @@ class InformacionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: cuerpo(context),
-      bottomNavigationBar:
-          const MiBottomAppBar(disabledButton: 1), // Deshabilitar Información
+      bottomNavigationBar: const MiBottomAppBar(disabledButton: 1), // Deshabilitar Información
     );
   }
 }
@@ -26,28 +25,17 @@ Widget cuerpo(BuildContext context) {
     ),
     child: Column(
       children: [
+        const SizedBox(height: 100), // Espacio superior
+        info(),
+        const SizedBox(height: 50), // Espacio entre el título y los botones
         Expanded(
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                info(),
-                SizedBox(
-                  width: 250,
-                  height: 250,
-                  child: botonMisMascotas(context),
-                ),
-                const SizedBox(height: 40), //Espacio entre los botones
-                SizedBox(
-                  width: 250,
-                  height: 250,
-                  child: botonMiInfo(context),
-                ),
-                // const SizedBox(height: 20), //Espacio entre los botones
-                // SizedBox(
-                //   width: 250, //tamaño botón
-                //   child: botonNose(context),
-                // ),
+                botonMisMascotas(context),
+                const SizedBox(height: 40), // Espacio entre los botones
+                botonMiInfo(context),
               ],
             ),
           ),
@@ -78,13 +66,23 @@ Widget botonMisMascotas(BuildContext context) {
     onPressed: () {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const InfoMascotaPage()),
+        MaterialPageRoute(builder: (context) => const MascotasPage()),
       );
     },
-    child: const Text("Mis mascotas",
-        style: TextStyle(
-          fontSize: 25.0,
-        )),
+    child: const Padding(
+      padding: EdgeInsets.all(20.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Mis mascotas",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 25.0),
+          ),
+          Icon(Icons.pets),
+        ],
+      ),
+    ),
   );
 }
 
@@ -104,6 +102,19 @@ Widget botonMiInfo(BuildContext context) {
         MaterialPageRoute(builder: (context) => const InfoUsuarioPage()),
       );
     },
-    child: const Text("Mi información", style: TextStyle(fontSize: 25.0)),
+    child: const Padding(
+      padding: EdgeInsets.all(20.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Mi información",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 25.0),
+          ),
+          Icon(Icons.person),
+        ],
+      ),
+    ),
   );
 }

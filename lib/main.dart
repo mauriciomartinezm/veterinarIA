@@ -26,7 +26,8 @@ class Miapp extends StatelessWidget {
     'home': (_) => const HomePage(),
     'informacion': (_) => const InformacionPage(),
     'infoUsuario': (_) => const InfoUsuarioPage(),
-    'infoMascotas': (_) => const InfoMascotaPage(),
+    'infoMascotas': (_) => const InfoMascotaPage(nombre: "",),
+
   };
 
   @override
