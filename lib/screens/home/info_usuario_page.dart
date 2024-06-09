@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../provider/userProvider.dart';
 
 class InfoUsuarioPage extends StatefulWidget {
-  const InfoUsuarioPage({super.key});
+  const InfoUsuarioPage({Key? key}) : super(key: key);
 
   @override
   State<InfoUsuarioPage> createState() => _InfoUsuarioPageState();
@@ -9,18 +11,38 @@ class InfoUsuarioPage extends StatefulWidget {
 
 class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
   final _formKey = GlobalKey<FormState>();
-  final _cedulaController = TextEditingController();
-  final _contrasenaController = TextEditingController();
-  final _primerNombreController = TextEditingController();
-  final _segundoNombreController = TextEditingController();
-  final _primerApellidoController = TextEditingController();
-  final _segundoApellidoController = TextEditingController();
-  final _sexoController = TextEditingController();
-  final _direccionController = TextEditingController();
-  final _municipioController = TextEditingController();
-  final _departamentoController = TextEditingController();
-  final _celularController = TextEditingController();
-  final _correoController = TextEditingController();
+  late TextEditingController _cedulaController;
+  late TextEditingController _contrasenaController;
+  late TextEditingController _primerNombreController;
+  late TextEditingController _segundoNombreController;
+  late TextEditingController _primerApellidoController;
+  late TextEditingController _segundoApellidoController;
+  late TextEditingController _sexoController;
+  late TextEditingController _direccionController;
+  late TextEditingController _municipioController;
+  late TextEditingController _departamentoController;
+  late TextEditingController _celularController;
+  late TextEditingController _correoController;
+
+  @override
+  void initState() {
+    super.initState();
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final user = userProvider.user;
+
+    _cedulaController = TextEditingController(text: user?.cedula ?? '');
+    _contrasenaController = TextEditingController(text: user?.contrasena ?? '');
+    _primerNombreController = TextEditingController(text: user?.primnombre ?? '');
+    _segundoNombreController = TextEditingController(text: user?.segnombre ?? '');
+    _primerApellidoController = TextEditingController(text: user?.primapellido ?? '');
+    _segundoApellidoController = TextEditingController(text: user?.segapellido ?? '');
+    _sexoController = TextEditingController(text: user?.idsexo.toString() ?? '');
+    _direccionController = TextEditingController(text: user?.direccion ?? '');
+    _municipioController = TextEditingController(text: user?.idmunicipio.toString() ?? '');
+    _departamentoController = TextEditingController(text: user?.iddepto.toString() ?? '');
+    _celularController = TextEditingController(text: user?.celular ?? '');
+    _correoController = TextEditingController(text: user?.correoe ?? '');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +75,7 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
           key: _formKey,
           child: Column(children: [
             _buildTextFormField(_cedulaController, "Cédula"),
-            _buildTextFormField(_contrasenaController, "Contraseña",
-                isPassword: true),
+            _buildTextFormField(_contrasenaController, "Contraseña", isPassword: true),
             _buildTextFormField(_primerNombreController, "Primer Nombre"),
             _buildTextFormField(_segundoNombreController, 'Segundo Nombre'),
             _buildTextFormField(_primerApellidoController, 'Primer Apellido'),
@@ -85,7 +106,7 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
       ),
       onPressed: () {
         if (_formKey.currentState!.validate()) {
-          //aqui va la comunicacion con la api Mauro
+          // Aquí va la comunicación con la API
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Información guardada')),
           );
@@ -95,8 +116,7 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
     );
   }
 
-  Widget _buildTextFormField(TextEditingController controller, String label,
-      {bool isPassword = false}) {
+  Widget _buildTextFormField(TextEditingController controller, String label, {bool isPassword = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: TextFormField(

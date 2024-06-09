@@ -123,7 +123,7 @@ LOCK TABLES `doctor` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `empleado`
+-- Table structure for table `usuario`
 --
 
 DROP TABLE IF EXISTS `usuario`;
@@ -133,16 +133,16 @@ CREATE TABLE `usuario` (
   `Cedula` varchar(20) NOT NULL,
   `Contrasena` varchar(20) NOT NULL,
   `PrimNombre` varchar(20),
-  `SegNombre` varchar(20),
+  `SegNombre` varchar(20) DEFAULT '',
   `PrimApellido` varchar(40),
-  `SegApellido` varchar(40),
-  `IDSexo` int,
+  `SegApellido` varchar(40) DEFAULT '',
+  `IDSexo` int DEFAULT 1,
   `IDCargo` int NOT NULL,
-  `Direccion` varchar(100),
-  `IDMunicipio` int,
-  `IDDepto` int,
-  `TelCel` varchar(10),
-  `CorreoE` varchar(80),
+  `Direccion` varchar(100) DEFAULT '',
+  `IDMunicipio` int DEFAULT '1',
+  `IDDepto` int DEFAULT '1',
+  `TelCel` varchar(10) DEFAULT '',
+  `CorreoE` varchar(80) DEFAULT '',
   PRIMARY KEY (`Cedula`),
   KEY `IDCargo` (`IDCargo`),
   KEY `IDDepto` (`IDDepto`),

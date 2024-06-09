@@ -5,6 +5,7 @@ import 'package:prueba1/backend/puente.dart';
 import 'package:provider/provider.dart';
 import '../provider/userProvider.dart';
 import '../model/user.dart';
+import 'package:flutter/services.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -114,6 +115,10 @@ class _LoginPageState extends State<LoginPage> {
           }
           return null;
         },
+        keyboardType: TextInputType.number,
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.digitsOnly,
+        ],
       ),
     );
   }

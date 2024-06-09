@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-//import 'package:prueba1/backend/puente.dart';
+import 'package:flutter/services.dart';
+import 'package:prueba1/backend/puente.dart';
 import 'package:prueba1/screens/login_page.dart';
 
 class RegisterPage extends StatelessWidget {
-  const RegisterPage({Key? key});
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +15,9 @@ class RegisterPage extends StatelessWidget {
 }
 
 Widget cuerpo(BuildContext context) {
+  TextEditingController cedulaController = TextEditingController();
   TextEditingController nombreController = TextEditingController();
   TextEditingController apellidosController = TextEditingController();
-  TextEditingController correoController = TextEditingController();
   TextEditingController contrasenaController = TextEditingController();
 
   return Container(
@@ -33,12 +34,12 @@ Widget cuerpo(BuildContext context) {
           children: [
             logo(),
             crea(),
+            campoCedula(cedulaController),
             campoNombre(nombreController),
             campoApellidos(apellidosController),
-            campoCorreo(correoController),
             campoContrasena(contrasenaController),
-            botonRegistrar(context, nombreController, apellidosController,
-                correoController, contrasenaController),
+            botonRegistrar(context, cedulaController, nombreController,
+                apellidosController, contrasenaController),
             tengo(context)
           ],
         ),
@@ -64,6 +65,31 @@ Widget crea() {
     "Crea tu cuenta",
     style: TextStyle(
         color: Colors.white, fontSize: 30.0, fontWeight: FontWeight.w700),
+  );
+}
+
+Widget campoCedula(TextEditingController controller) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 10),
+    child: TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        hintText: "Cédula",
+        fillColor: Colors.white,
+        filled: true,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15.0),
+          borderSide: const BorderSide(
+            color: Colors.grey,
+          ),
+        ),
+        prefixIcon: const Icon(Icons.perm_identity),
+      ),
+      keyboardType: TextInputType.number,
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly,
+      ],
+    ),
   );
 }
 
@@ -109,7 +135,7 @@ Widget campoApellidos(TextEditingController controller) {
   );
 }
 
-Widget campoCorreo(TextEditingController controller) {
+/*Widget campoCorreo(TextEditingController controller) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 10),
     child: TextField(
@@ -128,7 +154,7 @@ Widget campoCorreo(TextEditingController controller) {
       ),
     ),
   );
-}
+}*/
 
 Widget campoContrasena(TextEditingController controller) {
   return Container(
@@ -154,9 +180,9 @@ Widget campoContrasena(TextEditingController controller) {
 
 Widget botonRegistrar(
     BuildContext context,
+    TextEditingController cedulaController,
     TextEditingController nombreController,
     TextEditingController apellidosController,
-    TextEditingController correoController,
     TextEditingController contrasenaController) {
   return ElevatedButton(
     style: ElevatedButton.styleFrom(
@@ -168,17 +194,15 @@ Widget botonRegistrar(
         side: const BorderSide(color: Colors.white, width: 2.0),
       ),
     ),
-    onPressed: () async{
-      String nombre = nombreController.text;
-      String apellidos = apellidosController.text;
-      String correo = correoController.text;
-      String contrasena = contrasenaController.text;
-      
-      //await getUser(1001153936);      
+    onPressed: () async {
+      String documento = cedulaController.text.trim();
+      String nombre = nombreController.text.trim();
+      String apellidos = apellidosController.text.trim();
+      String contrasena = contrasenaController.text.trim();
 
-      if (nombre.isEmpty ||
+      if (documento.isEmpty ||
+          nombre.isEmpty ||
           apellidos.isEmpty ||
-          correo.isEmpty ||
           contrasena.isEmpty) {
         // Verificar que todos los campos estén llenos
         ScaffoldMessenger.of(context).showSnackBar(
@@ -186,17 +210,35 @@ Widget botonRegistrar(
         );
       } else if (contrasena.length < 3) {
         // Verificar que la contraseña tenga al menos 3 caracteres
-                ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('La contraseña debe tener al menos 3 caracteres')),
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('La contraseña debe tener al menos 3 caracteres')),
         );
       } else {
-        // Realizar el registro aquí
-        // Por ejemplo, puedes enviar los datos a una API
-        // Una vez registrado, puedes navegar a la página de inicio de sesión
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-        );
+        try {
+          int cedula = int.parse(documento);
+          var response =
+              await registerUser(cedula, contrasena, nombre, apellidos);
+          if (response.containsKey('messageSuccess')) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text('Registro exitoso, por favor inicie sesión')),
+            );
+          } else if(response.containsKey('existingUser')){
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("El usuario ya existe en el sistema")),
+            );
+          }
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text('La cédula debe ser un número válido')),
+          );
+        }
       }
     },
     child: const Text("Registrarse", style: TextStyle(fontSize: 17.0)),
@@ -221,4 +263,3 @@ Widget tengo(BuildContext context) {
     ),
   );
 }
-
