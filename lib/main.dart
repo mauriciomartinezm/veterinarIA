@@ -7,6 +7,7 @@ import 'screens/home/home_page.dart';
 import 'screens/home/info_page.dart';
 import 'screens/home/info_usuario_page.dart';
 import 'screens/home/info_mascota_page.dart';
+import './screens/home/citas_page.dart';
 
 void main() {
   runApp(
@@ -27,6 +28,7 @@ class Miapp extends StatelessWidget {
     'informacion': (_) => const InformacionPage(),
     'infoUsuario': (_) => const InfoUsuarioPage(),
     'infoMascotas': (_) => const InfoMascotaPage(nombre: "",),
+    'citas': (_) => const CitasPage(),
 
   };
 
@@ -36,7 +38,7 @@ class Miapp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Mi app",
       routes: _routes,
-      initialRoute: 'login',
+      initialRoute: 'home',
     );
   }
 }

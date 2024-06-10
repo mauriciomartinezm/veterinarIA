@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../barra_inferior.dart';
+import 'citas_page.dart';
 import '../../provider/userProvider.dart';
 import 'package:provider/provider.dart';
 
@@ -19,14 +20,6 @@ class HomePage extends StatelessWidget {
 Widget cuerpo(BuildContext context) {
   return Container(
     decoration: const BoxDecoration(
-      // gradient: LinearGradient(
-      //   colors: [
-      //     Color.fromRGBO(221, 166, 101, 1),
-      //     Color.fromRGBO(161, 108, 44, 1),
-      //   ],
-      //   begin: Alignment.topRight,
-      //   end: Alignment.bottomLeft,
-      // ),
       image: DecorationImage(
         image: AssetImage("assets/backgrounds/fondo_cafe.jpg"),
         fit: BoxFit.cover,
@@ -43,16 +36,6 @@ Widget cuerpo(BuildContext context) {
                 SizedBox(
                   width: 250, //tamaño botón
                   child: botonCitas(context),
-                ),
-                const SizedBox(height: 20), //Espacio entre los botones
-                SizedBox(
-                  width: 250, // tamaño botón
-                  child: botonMascotas(context),
-                ),
-                const SizedBox(height: 20), //Espacio entre los botones
-                SizedBox(
-                  width: 250, //tamaño botón
-                  child: botonNose(context),
                 ),
               ],
             ),
@@ -96,9 +79,9 @@ class FotoPerfil extends StatelessWidget {
 }
 
 Widget saludo(BuildContext context) {
-  var userProvider = Provider.of<UserProvider>(context);
-  var user = userProvider.user;
-  String nombre = user!.primnombre;
+  // var userProvider = Provider.of<UserProvider>(context);
+  // var user = userProvider.user;
+  // String nombre = user!.primnombre;
 
   return Positioned(
     left: 160,
@@ -111,8 +94,8 @@ Widget saludo(BuildContext context) {
           style: TextStyle(fontSize: 25),
         ),
         Text(
-          //"nombre",
-          nombre,
+          "nombre",
+          // nombre,
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
         const Text(
@@ -134,38 +117,12 @@ Widget botonCitas(BuildContext context) {
         borderRadius: BorderRadius.circular(20.0),
       ),
     ),
-    onPressed: () {},
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const CitasPage()),
+      );
+    },
     child: const Text("Citas", style: TextStyle(fontSize: 25.0)),
-  );
-}
-
-Widget botonMascotas(BuildContext context) {
-  return ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      padding: const EdgeInsets.symmetric(vertical: 25),
-      backgroundColor: const Color.fromARGB(255, 153, 111, 63),
-      foregroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-    ),
-    onPressed: () {},
-    child: const Text("Mascotas", style: TextStyle(fontSize: 25.0)),
-  );
-}
-
-Widget botonNose(BuildContext context) {
-  return ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      padding: const EdgeInsets.symmetric(vertical: 25),
-      backgroundColor: const Color.fromARGB(255, 153, 111, 63),
-      foregroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-    ),
-    onPressed: () {},
-    child:
-        const Text("Cancelemos esta mondá", style: TextStyle(fontSize: 17.0)),
   );
 }

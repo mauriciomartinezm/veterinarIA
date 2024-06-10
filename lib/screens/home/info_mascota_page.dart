@@ -72,9 +72,9 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
         title: const Text(
           "Nombre de la mascota",
           style: TextStyle(
-            color: Colors.black,
-            fontSize: 20.0,
-          ),
+              color: Color.fromRGBO(221, 166, 101, 1),
+              fontSize: 25.0,
+              fontWeight: FontWeight.w700),
         ),
         backgroundColor: Colors.white,
       ),

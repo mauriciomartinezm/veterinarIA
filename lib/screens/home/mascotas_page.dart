@@ -45,7 +45,14 @@ class _MascotasPageState extends State<MascotasPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mis Mascotas'),
+        title: const Text(
+          "Mis mascotas",
+          style: TextStyle(
+              color: Color.fromRGBO(221, 166, 101, 1),
+              fontSize: 25.0,
+              fontWeight: FontWeight.w700),
+        ),
+        backgroundColor: Colors.white,
       ),
       body: ListView.builder(
         itemCount: mascotas.length,
