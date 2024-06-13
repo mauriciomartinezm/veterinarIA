@@ -79,9 +79,9 @@ class FotoPerfil extends StatelessWidget {
 }
 
 Widget saludo(BuildContext context) {
-  // var userProvider = Provider.of<UserProvider>(context);
-  // var user = userProvider.user;
-  // String nombre = user!.primnombre;
+   var userProvider = Provider.of<UserProvider>(context);
+   var user = userProvider.user;
+   String nombre = user!.primnombre;
 
   return Positioned(
     left: 160,
@@ -94,8 +94,8 @@ Widget saludo(BuildContext context) {
           style: TextStyle(fontSize: 25),
         ),
         Text(
-          "nombre",
-          // nombre,
+          //"nombre",
+          nombre,
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
         const Text(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:prueba1/backend/puente.dart';
+import 'package:prueba1/backend/api_services/api_client.dart';
 import 'package:prueba1/screens/login_page.dart';
 
 class RegisterPage extends StatelessWidget {

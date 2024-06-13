@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prueba1/screens/home/home_page.dart';
 import 'register_page.dart';
-import 'package:prueba1/backend/puente.dart';
+import 'package:prueba1/backend/api_services/api_client.dart';
 import 'package:provider/provider.dart';
 import '../provider/userProvider.dart';
 import '../model/user.dart';
@@ -170,10 +170,9 @@ class _LoginPageState extends State<LoginPage> {
       ),
       onPressed: () async {
         // Obtener los valores de los campos de texto
-        String cedulaText = _usernameController.text.trim();
+        String cedula= _usernameController.text.trim();
         String password = _passwordController.text.trim();
 
-        int cedula = int.parse(cedulaText);
         // Realizar el inicio de sesión
         var response = await loginUser(cedula, password);
         // Manejo de la respuesta

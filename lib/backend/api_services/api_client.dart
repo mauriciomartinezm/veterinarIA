@@ -29,7 +29,7 @@ Future<Map<String, dynamic>> updateInf(int cedula) async {
   }
 }
 
-Future<Map<String, dynamic>> loginUser(int cedula, String contrasena) async {
+Future<Map<String, dynamic>> loginUser(String cedula, String contrasena) async {
   var url =
       Uri.parse('http://192.168.10.4:3000/login'); // Cambiado para emulador
 
@@ -72,7 +72,7 @@ void getUsers() async {
 
 Future<Map<String, dynamic>> registerUser(int cedula, String contrasena,
     String primnombre, String primapellido) async {
-  var url = Uri.parse('http://192.168.56.1:3000/registerUser');
+  var url = Uri.parse('http://192.168.10.4:3000/registerUser');
   var response = await http.post(
     url,
     headers: {'Content-Type': 'application/json'},
