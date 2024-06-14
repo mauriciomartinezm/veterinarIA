@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:js_interop';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../../model/pet.dart';
@@ -69,16 +70,15 @@ Future<Map<String, dynamic>> registerPet(String nombre, String cedula) async {
   }
 }
 
-Future<Map<String, dynamic>> updateInf(int cedula) async {
+Future<Map<String, dynamic>> updateInf(int IDMascota, Pet pet) async {
   var url =
-      Uri.parse('http://192.168.10.4:3000/getUser'); // Cambiado para emulador
-
+      Uri.parse('http://192.168.10.4:3000/updatePet/$IDMascota'); // Cambiado para emulador
   try {
     // Enviar la solicitud POST con cedula y contrasenia en el cuerpo
-    var response = await http.post(
+    var response = await http.put(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'documento': cedula.toString()}),
+      body: jsonEncode(pet),
     );
 
     // Verificar el estado de la respuesta

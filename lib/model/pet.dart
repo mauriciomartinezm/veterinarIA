@@ -1,46 +1,46 @@
 class Pet {
-  final int id;
-  final String nombre;
-  final String cedula;
-  final int? especie;
-  final int? familia;
-  final int? genero;
-  final String? fechaNacimiento;
-  final int? sexo;
-  final String fechaIngreso;
-  final String? estado;
-  final String? fechaSalida;
-  final String? tipoSalida;
+  final int IDMascota;
+  final String Nombre;
+  final String CedulaPropietario;
+  final int? IDEspecie;
+  final int? IDFamilia;
+  final int? IDGenero;
+  final String? Fnacimiento;
+  final int? IDSexo;
+  final String FIngreso;
+  final String? IDEstadoMasc;
+  final String? FSalida;
+  final String? IDTipoSalidaMasc;
 
   Pet({
-    required this.id,
-    required this.nombre,
-    required this.cedula,
-    required this.especie,
-    required this.familia,
-    required this.genero,
-    required this.fechaNacimiento,
-    required this.sexo,
-    required this.fechaIngreso,
-    required this.estado,
-    required this.fechaSalida,
-    required this.tipoSalida,
+    required this.IDMascota,
+    required this.Nombre,
+    required this.CedulaPropietario,
+    required this.IDEspecie,
+    required this.IDFamilia,
+    required this.IDGenero,
+    required this.Fnacimiento,
+    required this.IDSexo,
+    required this.FIngreso,
+    required this.IDEstadoMasc,
+    required this.FSalida,
+    required this.IDTipoSalidaMasc,
   });
 
   factory Pet.fromJson(Map<String, dynamic> json) {
     return Pet(
-      id: json['IDMascota'],
-      nombre: json['Nombre'],
-      cedula: json['CedulaPropietario'],
-      especie: json['IDEspecie'],
-      familia: json['IDFamilia'],
-      genero: json['IDGenero'],
-      fechaNacimiento: json['Fnacimiento'],
-      sexo: json['IDSexo'],
-      fechaIngreso: json['FIngreso'],
-      estado: json['IDEstadoMasc'],
-      fechaSalida: json['FSalida'],
-      tipoSalida: json['IDTipoSalidaMasc'],
+      IDMascota: json['IDMascota'],
+      Nombre: json['Nombre'],
+      CedulaPropietario: json['CedulaPropietario'],
+      IDEspecie: json['IDEspecie'],
+      IDFamilia: json['IDFamilia'],
+      IDGenero: json['IDGenero'],
+      Fnacimiento: json['Fnacimiento'],
+      IDSexo: json['IDSexo'],
+      FIngreso: json['FIngreso'],
+      IDEstadoMasc: json['IDEstadoMasc'],
+      FSalida: json['FSalida'],
+      IDTipoSalidaMasc: json['IDTipoSalidaMasc'],
     );
   }
 }

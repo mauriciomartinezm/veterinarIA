@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:prueba1/backend/api_services/api_pet.dart';
 import '../../model/pet.dart';
+import 'package:date_field/date_field.dart';
+import 'package:intl/intl.dart';
+
 class InfoMascotaPage extends StatefulWidget {
   final int IDMascota;
-
   const InfoMascotaPage({super.key, required this.IDMascota});
 
   @override
@@ -22,8 +26,10 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
   final _estadoController = TextEditingController();
   final _fechaSalidaController = TextEditingController();
   final _tipoSalidaController = TextEditingController();
+  String CedulaPropietario = '';
+  int IDMascota = 0;
 
-  final List<String> opcionesFamilia = [
+  List<String> opcionesFamilia = [
     "Serpientes",
     "Lagartos",
     "Tortugas",
@@ -70,16 +76,18 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
     try {
       Pet pet = await getPet(widget.IDMascota);
       setState(() {
-        _nombreController.text = pet.nombre;
-        _especieController.text = pet.especie?.toString() ?? '';
-        _familiaController.text = pet.familia?.toString() ?? '';
-        _generoController.text = pet.genero?.toString() ?? '';
-        _fechaController.text = pet.fechaNacimiento ?? '';
-        _sexoController.text = pet.sexo?.toString() ?? '';
-        _fechaIngresoController.text = pet.fechaIngreso;
-        _estadoController.text = pet.estado ?? '';
-        _fechaSalidaController.text = pet.fechaSalida ?? '';
-        _tipoSalidaController.text = pet.tipoSalida ?? '';
+        IDMascota = pet.IDMascota;
+        CedulaPropietario = pet.CedulaPropietario;
+        _nombreController.text = pet.Nombre;
+        _especieController.text = pet.IDEspecie?.toString() ?? '';
+        _familiaController.text = pet.IDFamilia?.toString() ?? '';
+        _generoController.text = pet.IDGenero?.toString() ?? '';
+        _fechaController.text = pet.Fnacimiento ?? '';
+        _sexoController.text = pet.IDSexo?.toString() ?? '';
+        _fechaIngresoController.text = pet.FIngreso;
+        _estadoController.text = pet.IDEstadoMasc ?? '';
+        _fechaSalidaController.text = pet.FSalida ?? '';
+        _tipoSalidaController.text = pet.IDTipoSalidaMasc ?? '';
       });
     } catch (e) {
       print('Error loading pet data: $e');
@@ -119,11 +127,18 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
             children: [
               _buildTextFormField(_nombreController, "Nombre",
                   isRequired: true),
-              _buildTextFormField(_fechaController, "Fecha de nacimiento"),
-              _buildTextFormField(_fechaIngresoController, "Fecha de ingreso"),
-              _buildTextFormField(_estadoController, "Estado"),
-              _buildTextFormField(_fechaSalidaController, "Fecha de salida"),
-              _buildTextFormField(_tipoSalidaController, "Tipo de salida"),
+              _buildDateField(
+                _fechaController,
+                "Fecha de nacimiento",
+              ),
+              _buildTextFormField(_fechaIngresoController, "Fecha de ingreso",
+                  isEnabled: false),
+              _buildTextFormField(_estadoController, "Estado",
+                  isEnabled: false),
+              _buildTextFormField(_fechaSalidaController, "Fecha de salida",
+                  isEnabled: false),
+              _buildTextFormField(_tipoSalidaController, "Tipo de salida",
+                  isEnabled: false),
               especie(),
               familia(),
               genero(),
@@ -183,12 +198,37 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
           side: const BorderSide(color: Colors.white, width: 2.0),
         ),
       ),
-      onPressed: () {
+      onPressed: () async {
         if (_formKey.currentState!.validate()) {
-          // Aquí va la comunicación con esa mondá
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Información guardada")),
+          // Crear un objeto Pet con los datos del formulario
+          Pet updatedPet = Pet(
+            IDMascota: IDMascota,
+            Nombre: _nombreController.text,
+            CedulaPropietario: '', // Ajusta según la estructura de Pet
+            IDEspecie: int.tryParse(_especieController.text),
+            IDFamilia: int.tryParse(_familiaController.text),
+            IDGenero: int.tryParse(_generoController.text),
+            Fnacimiento: _fechaController.text,
+            IDSexo: int.tryParse(_sexoController.text),
+            FIngreso: _fechaIngresoController.text,
+            IDEstadoMasc: _estadoController.text,
+            FSalida: _fechaSalidaController.text,
+            IDTipoSalidaMasc: _tipoSalidaController.text,
           );
+
+          try {
+            // Llamar al subprograma updateUser con el ID de la mascota y el objeto Pet
+            var resposne = await updateInf(IDMascota, updatedPet);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Información actualizada")),
+            );
+          } catch (error) {
+            print('Error al actualizar mascota: $error');
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Error al actualizar mascota")),
+            );
+          }
         }
       },
       child: const Text("Actualizar", style: TextStyle(fontSize: 18)),
@@ -196,7 +236,9 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
   }
 
   Widget _buildTextFormField(TextEditingController controller, String label,
-      {bool isPassword = false, bool isRequired = false}) {
+      {bool isPassword = false,
+      bool isRequired = false,
+      bool isEnabled = true}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: TextFormField(
@@ -215,6 +257,42 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
             return "Por favor ingrese su $label";
           }
           return null;
+        },
+        enabled: isEnabled,
+      ),
+    );
+  }
+
+  Widget _buildDateField(TextEditingController controller, String label,
+      {bool isEnabled = true}) {
+    DateTime? initialDate;
+    if (controller.text.isNotEmpty) {
+      try {
+        initialDate = DateFormat('yyyy-MM-dd').parse(controller.text);
+      } catch (e) {
+        print('Error parsing date: $e');
+      }
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: DateTimeFormField(
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+        ),
+        mode: DateTimeFieldPickerMode.date,
+        enabled: isEnabled,
+        dateFormat: DateFormat('yyyy-MM-dd'),
+        initialValue: initialDate,
+        firstDate: DateTime(1900),
+        lastDate: DateTime.now(),
+        onDateSelected: (DateTime value) {
+          controller.text = DateFormat('yyyy-MM-dd').format(value);
         },
       ),
     );
