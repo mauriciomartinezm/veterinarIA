@@ -38,7 +38,8 @@ class Miapp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Mi app",
       routes: _routes,
-      initialRoute: 'login',
+      initialRoute: 'home'
+      ,
     );
   }
 }

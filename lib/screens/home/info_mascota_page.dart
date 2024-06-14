@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:prueba1/backend/api_services/api_pet.dart';
 import '../../model/pet.dart';
@@ -182,47 +181,11 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
               familia(),
               genero(),
               sexo(),
-              _buildImagePicker(),
               botonActualizar(context),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildImagePicker() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 20),
-        const Text(
-          "Foto de la mascota",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-            // No se como pero aqui va la logica para seleccionar la iamgen
-          },
-          child: Container(
-            width: double.infinity,
-            height: 150,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(
-              child: _selectedImage == null
-                  ? const Icon(Icons.camera_alt, size: 50, color: Colors.grey)
-                  : Image.asset(_selectedImage!),
-            ),
-          ),
-        ),
-      ],
     );
   }
 

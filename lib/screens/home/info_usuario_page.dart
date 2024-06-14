@@ -29,6 +29,7 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
   late TextEditingController _correoController;
   List<String> departamentos = [];
   List<String> municipios = [];
+  bool _isPasswordVisible = false;
 
   @override
   void initState() {
@@ -49,25 +50,22 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
     _sexoController =
         TextEditingController(text: user?.idsexo.toString() ?? '');
     _direccionController = TextEditingController(text: user?.direccion ?? '');
-    _direccionController = TextEditingController(text: user?.direccion ?? '');
     _departamentoController =
         TextEditingController(text: user?.departamento ?? '');
     _municipioController = TextEditingController(text: user?.municipio ?? '');
     _celularController = TextEditingController(text: user?.celular ?? '');
     _correoController = TextEditingController(text: user?.correoe ?? '');
 
-    // Fetch departments and set initial selected value
     _fetchDepartamentos().then((_) {
-    if (user?.departamento != null) {
-      _departamentoController.text = user!.departamento;
-      _fetchMunicipios(user.departamento).then((_) {
-        setState(() {
-          _municipioController.text = user.municipio;
+      if (user?.departamento != null) {
+        _departamentoController.text = user!.departamento;
+        _fetchMunicipios(user.departamento).then((_) {
+          setState(() {
+            _municipioController.text = user.municipio;
+          });
         });
-            });
-    }
-  });
-
+      }
+    });
   }
 
   Future<void> _fetchDepartamentos() async {
@@ -175,27 +173,28 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
         child: Form(
           key: _formKey,
           child: Column(children: [
-            _buildTextFormField(_cedulaController, "Cédula"),
-            _buildTextFormField(_contrasenaController, "Contraseña",
-                isPassword: true),
+            _buildTextFormField(_cedulaController, "Cédula", isEnabled: false),
+            _buildPasswordFormField(_contrasenaController, "Contraseña"),
             _buildTextFormField(_primerNombreController, "Primer Nombre"),
-            _buildTextFormField(_segundoNombreController, 'Segundo Nombre'),
+            _buildTextFormField(_segundoNombreController, 'Segundo Nombre',
+                isOptional: true),
             _buildTextFormField(_primerApellidoController, 'Primer Apellido'),
             _buildTextFormField(_segundoApellidoController, 'Segundo Apellido'),
-            _buildTextFormField(_sexoController, 'Sexo'),
+            _buildDropdownField(_sexoController, 'Sexo',
+                ['Masculino', 'Femenino', '39 tipos de gay'], (value) {}),
             _buildTextFormField(_direccionController, 'Dirección'),
             _buildDropdownField(
                 _departamentoController, "Departamento", departamentos,
                 (value) {
-              _fetchMunicipios(
-                  value); // Cargar municipios cuando cambie el departamento
+              _fetchMunicipios(value);
             }),
-            _buildDropdownField(_municipioController, "Municipio", municipios,
-                (value) {
-              // Aquí puedes realizar alguna acción si es necesario
-            }),
-            _buildTextFormField(_celularController, 'Celular'),
-            _buildTextFormField(_correoController, 'Correo'),
+            _buildDropdownField(
+                _municipioController, "Municipio", municipios, (value) {}),
+            _buildTextFormField(_celularController, 'Celular',
+                keyboardType: TextInputType.number),
+            _buildTextFormField(_correoController, 'Correo',
+                keyboardType: TextInputType.emailAddress,
+                validator: _emailValidator),
             botonActualizar(context),
           ]),
         ),
@@ -204,12 +203,18 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
   }
 
   Widget _buildTextFormField(TextEditingController controller, String label,
-      {bool isPassword = false}) {
+      {bool isPassword = false,
+      bool isEnabled = true,
+      bool isOptional = false,
+      TextInputType keyboardType = TextInputType.text,
+      String? Function(String?)? validator}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: TextFormField(
         controller: controller,
-        obscureText: isPassword,
+        obscureText: isPassword && !_isPasswordVisible,
+        enabled: isEnabled,
+        keyboardType: keyboardType,
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(
@@ -217,15 +222,36 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
           ),
           filled: true,
           fillColor: Colors.white,
+          suffixIcon: isPassword
+              ? IconButton(
+                  icon: Icon(_isPasswordVisible
+                      ? Icons.visibility
+                      : Icons.visibility_off),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
+                )
+              : null,
         ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return "Por favor ingrese su $label";
-          }
-          return null;
-        },
+        validator: validator ??
+            (value) {
+              if (value == null || value.isEmpty) {
+                if (isOptional) {
+                  return null;
+                }
+                return "Por favor ingrese su $label";
+              }
+              return null;
+            },
       ),
     );
+  }
+
+  Widget _buildPasswordFormField(
+      TextEditingController controller, String label) {
+    return _buildTextFormField(controller, label, isPassword: true);
   }
 
   Widget _buildDropdownField(TextEditingController controller, String label,
@@ -288,32 +314,34 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
           final user = userProvider.user;
 
           var response = await updateInf(
-              user?.cedula,
-              _contrasenaController.text,
-              _primerNombreController.text,
-              _segundoNombreController.text,
-              _primerApellidoController.text,
-              _segundoApellidoController.text,
-              _sexoController.text,
-              _direccionController.text,
-              _municipioController.text,
-              _departamentoController.text,
-              _celularController.text,
-              _correoController.text);
+            user?.cedula,
+            _contrasenaController.text,
+            _primerNombreController.text,
+            _segundoNombreController.text,
+            _primerApellidoController.text,
+            _segundoApellidoController.text,
+            _sexoController.text,
+            _direccionController.text,
+            _municipioController.text,
+            _departamentoController.text,
+            _celularController.text,
+            _correoController.text,
+          );
 
           var user2 = User(
-              cedula: response['propietario']['CedulaPropietario'],
-              contrasena: response['propietario']['Contrasena'],
-              primnombre: response['propietario']['PrimNombre'],
-              segnombre: response['propietario']['SegNombre'],
-              primapellido: response['propietario']['PrimApellido'],
-              segapellido: response['propietario']['SegApellido'],
-              idsexo: response['propietario']['IDSexo'],
-              direccion: response['propietario']['Direccion'],
-              municipio: response['propietario']['Municipio'],
-              departamento: response['propietario']['Departamento'],
-              celular: response['propietario']['TelCel'],
-              correoe: response['propietario']['CorreoE']);
+            cedula: response['propietario']['CedulaPropietario'],
+            contrasena: response['propietario']['Contrasena'],
+            primnombre: response['propietario']['PrimNombre'],
+            segnombre: response['propietario']['SegNombre'],
+            primapellido: response['propietario']['PrimApellido'],
+            segapellido: response['propietario']['SegApellido'],
+            idsexo: response['propietario']['IDSexo'],
+            direccion: response['propietario']['Direccion'],
+            municipio: response['propietario']['Municipio'],
+            departamento: response['propietario']['Departamento'],
+            celular: response['propietario']['TelCel'],
+            correoe: response['propietario']['CorreoE'],
+          );
 
           userProvider.login(user2);
           ScaffoldMessenger.of(context).showSnackBar(
@@ -323,6 +351,16 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
       },
       child: const Text('Actualizar', style: TextStyle(fontSize: 16)),
     );
+  }
+
+  String? _emailValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Por favor ingrese su Correo';
+    }
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+      return 'Por favor ingrese un correo válido';
+    }
+    return null;
   }
 
   @override

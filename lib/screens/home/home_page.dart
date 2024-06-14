@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: cuerpo(context),
       bottomNavigationBar:
-          const MiBottomAppBar(disabledButton: 2), //Deshabilita el Home
+          const MiBottomAppBar(disabledButton: 2), // Deshabilita el Home
     );
   }
 }
@@ -34,7 +34,7 @@ Widget cuerpo(BuildContext context) {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: 250, //tamaño botón
+                  width: 250, // tamaño botón
                   child: botonCitas(context),
                 ),
               ],
@@ -53,38 +53,19 @@ Widget superior(BuildContext context) {
     color: Colors.white,
     child: Stack(
       children: [
-        const FotoPerfil(),
         saludo(context),
       ],
     ),
   );
 }
 
-class FotoPerfil extends StatelessWidget {
-  const FotoPerfil({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Positioned(
-      left: 30,
-      top: 70,
-      child: CircleAvatar(
-        radius: 50,
-        backgroundImage: NetworkImage(
-          "https://i.pinimg.com/474x/31/ec/2c/31ec2ce212492e600b8de27f38846ed7.jpg",
-        ),
-      ),
-    );
-  }
-}
-
 Widget saludo(BuildContext context) {
-   var userProvider = Provider.of<UserProvider>(context);
-   var user = userProvider.user;
-   String nombre = user!.primnombre;
+  var userProvider = Provider.of<UserProvider>(context);
+  // var user = userProvider.user;
+  // String nombre = user!.primnombre;
 
   return Positioned(
-    left: 160,
+    left: 30,
     top: 75,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,9 +75,9 @@ Widget saludo(BuildContext context) {
           style: TextStyle(fontSize: 25),
         ),
         Text(
-          //"nombre",
-          nombre,
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          "Guapo",
+          // nombre,
+          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
         const Text(
           "Es un gusto tenerte por aquí",

@@ -220,14 +220,14 @@ class _AddMascotaDialogState extends State<AddMascotaDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: _handleAdd,
-          child: const Text('Agregar'),
-        ),
-        TextButton(
           onPressed: () {
             Navigator.pop(context);
           },
           child: const Text('Cancelar'),
+        ),
+        TextButton(
+          onPressed: _handleAdd,
+          child: const Text('Agregar'),
         ),
       ],
     );
