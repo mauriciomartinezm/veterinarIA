@@ -310,7 +310,6 @@ CREATE TABLE `mascota` (
   `Fnacimiento` varchar(10),
   `IDSexo` int,
   `FIngreso` varchar(10) NOT NULL,
-  `CedulaDoctor` int,
   `IDEstadoMasc` int,
   `FSalida` varchar(10),
   `IDTipoSalidaMasc` int,
@@ -320,7 +319,6 @@ CREATE TABLE `mascota` (
   KEY `IDFamilia` (`IDFamilia`),
   KEY `IDGenero` (`IDGenero`),
   KEY `IDSexo` (`IDSexo`),
-  KEY `CedulaDoctor` (`CedulaDoctor`),
   KEY `IDEstadoMasc` (`IDEstadoMasc`),
   KEY `IDTipoSalidaMasc` (`IDTipoSalidaMasc`),
   CONSTRAINT `mascota_ibfk_1` FOREIGN KEY (`CedulaPropietario`) REFERENCES `propietario` (`CedulaPropietario`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -328,7 +326,6 @@ CREATE TABLE `mascota` (
   CONSTRAINT `mascota_ibfk_3` FOREIGN KEY (`IDFamilia`) REFERENCES `familia` (`IDFamilia`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mascota_ibfk_4` FOREIGN KEY (`IDGenero`) REFERENCES `genero` (`IDGenero`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mascota_ibfk_5` FOREIGN KEY (`IDSexo`) REFERENCES `sexo` (`IDSexo`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `mascota_ibfk_6` FOREIGN KEY (`CedulaDoctor`) REFERENCES `doctor` (`CedulaDoctor`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mascota_ibfk_7` FOREIGN KEY (`IDEstadoMasc`) REFERENCES `estadomascota` (`IDEstadoMasc`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mascota_ibfk_8` FOREIGN KEY (`IDTipoSalidaMasc`) REFERENCES `tiposalidamascota` (`IDTSalidaMasc`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

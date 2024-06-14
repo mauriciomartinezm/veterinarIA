@@ -12,21 +12,58 @@ class MascotasPage extends StatefulWidget {
 }
 
 class _MascotasPageState extends State<MascotasPage> {
-  List<String> mascotas = [];
+  List<Map<String, dynamic>> mascotas = [];
+
   late String cedula;
 
   @override
   void initState() {
     super.initState();
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final user = userProvider.user;
-    cedula = user?.cedula ?? '';
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final user = userProvider.user;
+      cedula = user?.cedula ?? '';
+
+      await fetchPets();
+    });
   }
 
-  void _addMascota(String nombre) {
-    setState(() {
-      mascotas.add(nombre);
-    });
+  Future<void> fetchPets() async {
+    try {
+      var pets = await getPets(cedula);
+      setState(() {
+        mascotas = pets.map((pet) {
+          return {
+            'id': pet['IDMascota'],
+            'nombre': pet['Nombre'],
+          };
+        }).toList();
+      });
+    } catch (e) {
+      print('Error al obtener mascotas: $e');
+    }
+  }
+
+  void _addMascota(String nombre, int id) {
+    try {
+      setState(() {
+        mascotas.add({
+          'id': id,
+          'nombre': nombre,
+        });
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Mascota agregada")),
+      );
+
+      Navigator.pop(context); // Cierra el diálogo de agregar mascota
+    } catch (error) {
+      print('Error al agregar mascota: $error');
+      setState(() {
+        //_errorMessage = 'Error al agregar la mascota';
+      });
+    }
   }
 
   void _removeMascota(int index) {
@@ -48,6 +85,9 @@ class _MascotasPageState extends State<MascotasPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        // Obtener el ID de la mascota seleccionada
+        int mascotaId = mascotas[index]['id'];
+
         return AlertDialog(
           title: const Text("Eliminar Mascota"),
           content:
@@ -60,7 +100,9 @@ class _MascotasPageState extends State<MascotasPage> {
               child: const Text('Cancelar'),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
+                var response =
+                    await deletePet(mascotaId); // Enviar el ID a deletePet
                 _removeMascota(index);
                 Navigator.pop(context);
               },
@@ -72,6 +114,7 @@ class _MascotasPageState extends State<MascotasPage> {
     );
   }
 
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,13 +132,15 @@ class _MascotasPageState extends State<MascotasPage> {
         itemCount: mascotas.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(mascotas[index]),
+            title: Text(mascotas[index]['nombre']),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        InfoMascotaPage(nombre: mascotas[index])),
+                  builder: (context) => InfoMascotaPage(
+                    IDMascota: mascotas[index]['id'],
+                  ),
+                ),
               );
             },
             trailing: IconButton(
@@ -114,7 +159,7 @@ class _MascotasPageState extends State<MascotasPage> {
 }
 
 class AddMascotaDialog extends StatefulWidget {
-  final Function(String) addMascota;
+  final Function(String, int) addMascota;
   final String cedula;
 
   const AddMascotaDialog({required this.addMascota, required this.cedula});
@@ -134,7 +179,9 @@ class _AddMascotaDialogState extends State<AddMascotaDialog> {
         _errorMessage = 'Ingrese el nombre de la mascota';
       });
     } else {
+      print("hola");
       var response = await registerPet(nombre, widget.cedula);
+
       if (response.containsKey('existingPet')) {
         setState(() {
           _errorMessage = 'Ya existe una mascota con ese nombre';
@@ -143,8 +190,9 @@ class _AddMascotaDialogState extends State<AddMascotaDialog> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Mascota agregada")),
         );
-        widget.addMascota(nombre);
-        Navigator.pop(context);
+        print(response['id']);
+        widget.addMascota(nombre, response['id']);
+        //Navigator.pop(context);
       }
     }
   }

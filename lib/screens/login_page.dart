@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../provider/userProvider.dart';
 import '../model/user.dart';
 import 'package:flutter/services.dart';
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 

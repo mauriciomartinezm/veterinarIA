@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:prueba1/backend/api_services/api_pet.dart';
+import '../../model/pet.dart';
 class InfoMascotaPage extends StatefulWidget {
-  final String nombre;
+  final int IDMascota;
 
-  const InfoMascotaPage({super.key, required this.nombre});
+  const InfoMascotaPage({super.key, required this.IDMascota});
 
   @override
   State<InfoMascotaPage> createState() => _InfoMascotaPageState();
@@ -62,7 +63,27 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
   @override
   void initState() {
     super.initState();
-    _nombreController.text = widget.nombre;
+    _loadPetData();
+  }
+
+  Future<void> _loadPetData() async {
+    try {
+      Pet pet = await getPet(widget.IDMascota);
+      setState(() {
+        _nombreController.text = pet.nombre;
+        _especieController.text = pet.especie?.toString() ?? '';
+        _familiaController.text = pet.familia?.toString() ?? '';
+        _generoController.text = pet.genero?.toString() ?? '';
+        _fechaController.text = pet.fechaNacimiento ?? '';
+        _sexoController.text = pet.sexo?.toString() ?? '';
+        _fechaIngresoController.text = pet.fechaIngreso;
+        _estadoController.text = pet.estado ?? '';
+        _fechaSalidaController.text = pet.fechaSalida ?? '';
+        _tipoSalidaController.text = pet.tipoSalida ?? '';
+      });
+    } catch (e) {
+      print('Error loading pet data: $e');
+    }
   }
 
   @override
@@ -96,7 +117,8 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
           key: _formKey,
           child: Column(
             children: [
-              _buildTextFormField(_nombreController, "Nombre", isRequired: true),
+              _buildTextFormField(_nombreController, "Nombre",
+                  isRequired: true),
               _buildTextFormField(_fechaController, "Fecha de nacimiento"),
               _buildTextFormField(_fechaIngresoController, "Fecha de ingreso"),
               _buildTextFormField(_estadoController, "Estado"),
@@ -210,7 +232,6 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
           filled: true,
           fillColor: Colors.white,
         ),
-       
         value:
             _familiaController.text.isNotEmpty ? _familiaController.text : null,
         onChanged: (String? newValue) {
