@@ -332,16 +332,6 @@ CREATE TABLE `mascota` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `mascota`
---
-
-LOCK TABLES `mascota` WRITE;
-/*!40000 ALTER TABLE `mascota` DISABLE KEYS */;
-INSERT INTO `mascota` VALUES (1,'Rayas',1001153936,1,5,5,'2023-05-10',1,'2023-06-21',100,1,'2023-06-22',2);
-/*!40000 ALTER TABLE `mascota` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `municipio`
 --
 
