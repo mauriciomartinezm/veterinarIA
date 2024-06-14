@@ -178,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
         // Manejo de la respuesta
         if (response.containsKey('messageSuccess')) {
           var user = User(
-              cedula: response['user']['Cedula'],
+              cedula: response['user']['CedulaPropietario'],
               contrasena: response['user']['Contrasena'],
               primnombre: response['user']['PrimNombre'],
               segnombre: response['user']['SegNombre'],
@@ -186,8 +186,8 @@ class _LoginPageState extends State<LoginPage> {
               segapellido: response['user']['SegApellido'],
               idsexo: response['user']['IDSexo'],
               direccion: response['user']['Direccion'],
-              idmunicipio: response['user']['IDMunicipio'],
-              iddepto: response['user']['IDDepto'],
+              municipio: response['user']['Municipio'],
+              departamento: response['user']['Departamento'],
               celular: response['user']['TelCel'],
               correoe: response['user']['CorreoE']);
           userProvider.login(user);

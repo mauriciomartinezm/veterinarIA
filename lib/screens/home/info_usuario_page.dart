@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../provider/userProvider.dart';
 import 'dart:convert';
+import '../../model/user.dart';
 import 'package:http/http.dart' as http;
+import '../../backend/api_services/api_client.dart';
 
 class InfoUsuarioPage extends StatefulWidget {
   const InfoUsuarioPage({Key? key}) : super(key: key);
@@ -21,8 +23,8 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
   late TextEditingController _segundoApellidoController;
   late TextEditingController _sexoController;
   late TextEditingController _direccionController;
-  late TextEditingController _municipioController;
   late TextEditingController _departamentoController;
+  late TextEditingController _municipioController;
   late TextEditingController _celularController;
   late TextEditingController _correoController;
   List<String> departamentos = [];
@@ -47,12 +49,25 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
     _sexoController =
         TextEditingController(text: user?.idsexo.toString() ?? '');
     _direccionController = TextEditingController(text: user?.direccion ?? '');
-    _departamentoController = TextEditingController(text: '');
-    _municipioController = TextEditingController(text: '');
+    _direccionController = TextEditingController(text: user?.direccion ?? '');
+    _departamentoController =
+        TextEditingController(text: user?.departamento ?? '');
+    _municipioController = TextEditingController(text: user?.municipio ?? '');
     _celularController = TextEditingController(text: user?.celular ?? '');
     _correoController = TextEditingController(text: user?.correoe ?? '');
 
-    _fetchDepartamentos();
+    // Fetch departments and set initial selected value
+    _fetchDepartamentos().then((_) {
+    if (user?.departamento != null) {
+      _departamentoController.text = user!.departamento;
+      _fetchMunicipios(user.departamento).then((_) {
+        setState(() {
+          _municipioController.text = user.municipio;
+        });
+            });
+    }
+  });
+
   }
 
   Future<void> _fetchDepartamentos() async {
@@ -75,6 +90,7 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
           setState(() {
             this.departamentos = departamentos;
           });
+          print(departamentos);
         } else {
           print(
               'No se encontró información sobre los departamentos de Colombia');
@@ -167,6 +183,7 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
             _buildTextFormField(_primerApellidoController, 'Primer Apellido'),
             _buildTextFormField(_segundoApellidoController, 'Segundo Apellido'),
             _buildTextFormField(_sexoController, 'Sexo'),
+            _buildTextFormField(_direccionController, 'Dirección'),
             _buildDropdownField(
                 _departamentoController, "Departamento", departamentos,
                 (value) {
@@ -183,29 +200,6 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
           ]),
         ),
       ),
-    );
-  }
-
-  Widget botonActualizar(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 150),
-        backgroundColor: const Color.fromRGBO(221, 166, 101, 1),
-        foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-          side: const BorderSide(color: Colors.white, width: 2.0),
-        ),
-      ),
-      onPressed: () {
-        if (_formKey.currentState!.validate()) {
-          // Aquí va la comunicación con la API
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Información guardada')),
-          );
-        }
-      },
-      child: const Text('Actualizar', style: TextStyle(fontSize: 16)),
     );
   }
 
@@ -236,8 +230,8 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
 
   Widget _buildDropdownField(TextEditingController controller, String label,
       List<String> items, Function(String) onChanged) {
-    String? selectedValue = controller.text.isNotEmpty ? controller.text : null;
-    print(this.departamentos);
+    String? selectedValue =
+        items.contains(controller.text) ? controller.text : null;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -247,15 +241,17 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
           setState(() {
             controller.text = value!;
           });
-          onChanged(value
-              .toString()); // Llamar a la función onChanged con el valor seleccionado
+          onChanged(
+              value!); // Llamar a la función onChanged con el valor seleccionado
         },
-        items: items
-            .map((item) => DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(item),
-                ))
-            .toList(),
+        items: items.map((item) {
+          String displayText =
+              item.length > 20 ? item.substring(0, 20) + '...' : item;
+          return DropdownMenuItem<String>(
+            value: item,
+            child: Text(displayText),
+          );
+        }).toList(),
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(
@@ -271,6 +267,61 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
           return null;
         },
       ),
+    );
+  }
+
+  Widget botonActualizar(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 150),
+        backgroundColor: const Color.fromRGBO(221, 166, 101, 1),
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+          side: const BorderSide(color: Colors.white, width: 2.0),
+        ),
+      ),
+      onPressed: () async {
+        if (_formKey.currentState!.validate()) {
+          final userProvider =
+              Provider.of<UserProvider>(context, listen: false);
+          final user = userProvider.user;
+
+          var response = await updateInf(
+              user?.cedula,
+              _contrasenaController.text,
+              _primerNombreController.text,
+              _segundoNombreController.text,
+              _primerApellidoController.text,
+              _segundoApellidoController.text,
+              _sexoController.text,
+              _direccionController.text,
+              _municipioController.text,
+              _departamentoController.text,
+              _celularController.text,
+              _correoController.text);
+
+          var user2 = User(
+              cedula: response['propietario']['CedulaPropietario'],
+              contrasena: response['propietario']['Contrasena'],
+              primnombre: response['propietario']['PrimNombre'],
+              segnombre: response['propietario']['SegNombre'],
+              primapellido: response['propietario']['PrimApellido'],
+              segapellido: response['propietario']['SegApellido'],
+              idsexo: response['propietario']['IDSexo'],
+              direccion: response['propietario']['Direccion'],
+              municipio: response['propietario']['Municipio'],
+              departamento: response['propietario']['Departamento'],
+              celular: response['propietario']['TelCel'],
+              correoe: response['propietario']['CorreoE']);
+
+          userProvider.login(user2);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Información guardada')),
+          );
+        }
+      },
+      child: const Text('Actualizar', style: TextStyle(fontSize: 16)),
     );
   }
 

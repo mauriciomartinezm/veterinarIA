@@ -1,16 +1,63 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-Future<Map<String, dynamic>> updateInf(int cedula) async {
+Future<Map<String, dynamic>> updateInf(
+   String? cedula,
+   String contrasena,
+   String primNombre,
+   String segNombre,
+   String primApellido,
+   String segApellido,
+   String idSexo,
+   String direccion,
+   String municipio,
+   String departamento,
+   String telCel,
+   String correoE,
+) async {
+  var url = Uri.parse('http://192.168.10.4:3000/updateUser/$cedula');
+
+  try {
+    var response = await http.put(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'CedulaPropietario': cedula,
+        'Contrasena': contrasena,
+        'PrimNombre': primNombre,
+        'SegNombre': segNombre,
+        'PrimApellido': primApellido,
+        'SegApellido': segApellido,
+        'IDSexo': idSexo,
+        'Direccion': direccion,
+        'Departamento': departamento,
+        'Municipio': municipio,
+        'TelCel': telCel,
+        'CorreoE': correoE,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      var response2 = getUser(cedula);
+      return response2;
+    } else {
+      var responseBody = jsonDecode(response.body);
+      return responseBody;
+    }
+  } catch (e) {
+    print('Error al hacer la solicitud: $e');
+    return {'messageFail': 'Error de conexión'};
+  }
+}
+Future<Map<String, dynamic>> getUser(String? CedulaPropietario) async {
   var url =
-      Uri.parse('http://192.168.10.4:3000/getUser'); // Cambiado para emulador
+      Uri.parse('http://192.168.10.4:3000/getUser/$CedulaPropietario'); // Cambiado para emulador
 
   try {
     // Enviar la solicitud POST con cedula y contrasenia en el cuerpo
-    var response = await http.post(
+    var response = await http.get(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'documento': cedula.toString()}),
     );
 
     // Verificar el estado de la respuesta

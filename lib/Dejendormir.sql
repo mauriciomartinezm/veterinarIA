@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `vqz518dddao7thbt` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `vqz518dddao7thbt`;
 -- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: localhost    Database: veterinarioelcachon
@@ -37,7 +35,7 @@ CREATE TABLE `cargo` (
 
 LOCK TABLES `cargo` WRITE;
 /*!40000 ALTER TABLE `cargo` DISABLE KEYS */;
-INSERT INTO `cargo` VALUES (1,'ADMINISTRADOR'),(2,'RECEPCIONISTA'),(3,'DOCTOR'),(4,'CLIENTE');
+INSERT INTO `cargo` VALUES (1,'ADMINISTRADOR'),(2,'RECEPCIONISTA'),(3,'DOCTOR');
 /*!40000 ALTER TABLE `cargo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -51,17 +49,17 @@ DROP TABLE IF EXISTS `cita`;
 CREATE TABLE `cita` (
   `IDCita` int NOT NULL AUTO_INCREMENT,
   `IDMascota` int NOT NULL,
-  `FechaCita` varchar(10) DEFAULT NULL,
+  `FechaCita` varchar(10) NOT NULL,
   `HoraCita` varchar(5) NOT NULL,
-  `ProceProgramado` varchar(80) NOT NULL,
-  `Observaciones` varchar(140) NOT NULL,
-  `CedulaDoctor` int NOT NULL,
+  `ProceProgramado` varchar(80) DEFAULT NULL,
+  `Observaciones` varchar(140) DEFAULT NULL,
+  `Propietario` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`IDCita`),
   KEY `IDMascota` (`IDMascota`),
-  KEY `CedulaDoctor` (`CedulaDoctor`),
+  KEY `fk_propietario_Cedulapropietario` (`Propietario`),
   CONSTRAINT `cita_ibfk_1` FOREIGN KEY (`IDMascota`) REFERENCES `mascota` (`IDMascota`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `cita_ibfk_2` FOREIGN KEY (`CedulaDoctor`) REFERENCES `doctor` (`CedulaDoctor`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `fk_propietario_Cedulapropietario` FOREIGN KEY (`Propietario`) REFERENCES `propietario` (`CedulaPropietario`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,6 +68,7 @@ CREATE TABLE `cita` (
 
 LOCK TABLES `cita` WRITE;
 /*!40000 ALTER TABLE `cita` DISABLE KEYS */;
+INSERT INTO `cita` VALUES (1,1,'2023-07-02','09:15','Capar a ese hp gato','',1001153936);
 /*!40000 ALTER TABLE `cita` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -108,8 +107,7 @@ CREATE TABLE `doctor` (
   `CedulaDoctor` int NOT NULL,
   `CedulaEmpleado` int NOT NULL,
   PRIMARY KEY (`CedulaDoctor`),
-  KEY `CedulaEmpleado` (`CedulaEmpleado`),
-  CONSTRAINT `doctor_ibfk_1` FOREIGN KEY (`CedulaEmpleado`) REFERENCES `empleado` (`CedulaEmpleado`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `CedulaEmpleado` (`CedulaEmpleado`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -119,35 +117,42 @@ CREATE TABLE `doctor` (
 
 LOCK TABLES `doctor` WRITE;
 /*!40000 ALTER TABLE `doctor` DISABLE KEYS */;
+INSERT INTO `doctor` VALUES (100,100);
 /*!40000 ALTER TABLE `doctor` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `usuario`
+-- Table structure for table `empleado`
 --
 
-DROP TABLE IF EXISTS `usuario`;
+DROP TABLE IF EXISTS `empleado`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `usuario` (
-  `Cedula` varchar(20) NOT NULL,
-  `Contrasena` varchar(20) NOT NULL,
-  `PrimNombre` varchar(20),
-  `SegNombre` varchar(20) DEFAULT '',
-  `PrimApellido` varchar(40),
-  `SegApellido` varchar(40) DEFAULT '',
-  `IDSexo` int DEFAULT 1,
+CREATE TABLE `empleado` (
+  `CedulaEmpleado` int NOT NULL,
+  `PrimNombre` varchar(20) NOT NULL,
+  `SegNombre` varchar(20) DEFAULT NULL,
+  `PrimApellido` varchar(40) NOT NULL,
+  `SegApellido` varchar(40) NOT NULL,
+  `IDSexo` int NOT NULL,
   `IDCargo` int NOT NULL,
-  `Direccion` varchar(100) DEFAULT '',
-  `IDMunicipio` varchar(40) DEFAULT '',
-  `IDDepto` varchar(40) DEFAULT '',
-  `TelCel` varchar(10) DEFAULT '',
-  `CorreoE` varchar(80) DEFAULT '',
-  PRIMARY KEY (`Cedula`),
+  `IDEspecializacion` int NOT NULL,
+  `Direccion` varchar(100) NOT NULL,
+  `IDMunicipio` int NOT NULL,
+  `IDDepto` int NOT NULL,
+  `TelCel` varchar(10) NOT NULL,
+  `CorreoE` varchar(80) NOT NULL,
+  PRIMARY KEY (`CedulaEmpleado`),
   KEY `IDCargo` (`IDCargo`),
+  KEY `IDDepto` (`IDDepto`),
+  KEY `IDEspecializacion` (`IDEspecializacion`),
+  KEY `IDMunicipio` (`IDMunicipio`),
   KEY `IDSexo` (`IDSexo`),
-  CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`IDCargo`) REFERENCES `cargo` (`IDCargo`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `usuario_ibfk_4` FOREIGN KEY (`IDSexo`) REFERENCES `sexo` (`IDSexo`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `empleado_ibfk_1` FOREIGN KEY (`IDCargo`) REFERENCES `cargo` (`IDCargo`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `empleado_ibfk_2` FOREIGN KEY (`IDDepto`) REFERENCES `departamento` (`IDDepto`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `empleado_ibfk_3` FOREIGN KEY (`IDEspecializacion`) REFERENCES `especializacion` (`IDEspecializacion`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `empleado_ibfk_4` FOREIGN KEY (`IDMunicipio`) REFERENCES `municipio` (`IDMunicipio`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `empleado_ibfk_5` FOREIGN KEY (`IDSexo`) REFERENCES `sexo` (`IDSexo`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -155,20 +160,38 @@ CREATE TABLE `usuario` (
 -- Dumping data for table `empleado`
 --
 
-LOCK TABLES `usuario` WRITE;
-/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES ('1','123','Jhonnnnnn','Kevin','Murillo','Martinez',1,1,'Cll 99 B',1,1,'3217153608','jhonkevinmurillom@gmail.com');
-INSERT INTO `usuario` VALUES ('2','123','Kehiber','Kevin','Mosquera','Mosquera',1,2,'Cll 99 B',1,1,'3217153608','jhonkevinmurillom@gmail.com');
-INSERT INTO `usuario` VALUES ('3','123','Lucho','Kevin','Murillo','Martinez',1,3,'Cll 99 B',1,1,'3217153608','jhonkevinmurillom@gmail.com');
-INSERT INTO `usuario` VALUES ('4','123','Tomas','Kevin','Murillo','Martinez',1,2,'Cll 99 B',1,1,'3217153608','jhonkevinmurillom@gmail.com');
-INSERT INTO `usuario` VALUES ('5','123','Mauricio','Kevin','Murillo','Martinez',1,4,'Cll 99 B',1,1,'3217153608','jhonkevinmurillom@gmail.com');
-INSERT INTO `usuario` VALUES ('6','123','Jhon','Kevin','Murillo','Martinez',1,4,'Cll 99 B',1,1,'3217153608','jhonkevinmurillom@gmail.com');
-INSERT INTO `usuario` VALUES ('7','123','Jhon','Kevin','Murillo','Martinez',1,4,'Cll 99 B',1,1,'3217153608','jhonkevinmurillom@gmail.com');
-INSERT INTO `usuario` VALUES ('8','123','Jhon','Kevin','Murillo','Martinez',1,4,'Cll 99 B',1,1,'3217153608','jhonkevinmurillom@gmail.com');
-
-/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
+LOCK TABLES `empleado` WRITE;
+/*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
+INSERT INTO `empleado` VALUES (100,'Jorge','David','Maturana','Lucumi',1,3,1,'Cll 102 Narnia',1,1,'3008888666','Jorge@gmail.com'),(1001153936,'Jhon','Kevin','Murillo','Martinez',1,1,1,'Cll 99 B',1,1,'3217153608','jhonkevinmurillom@gmail.com');
+/*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 UNLOCK TABLES;
 
+--
+-- Table structure for table `especializacion`
+--
+
+DROP TABLE IF EXISTS `especializacion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `especializacion` (
+  `IDEspecializacion` int NOT NULL AUTO_INCREMENT,
+  `NombreEspecializacion` varchar(80) NOT NULL,
+  `DescripEspecializacion` varchar(150) NOT NULL,
+  PRIMARY KEY (`IDEspecializacion`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `especializacion`
+--
+
+LOCK TABLES `especializacion` WRITE;
+/*!40000 ALTER TABLE `especializacion` DISABLE KEYS */;
+INSERT INTO `especializacion` VALUES (1,'VETERINARIA GENERAL','SE ENCARGA DE EXAMINAR LA MAYORIA DE ESPECIES.'),(2,'VETERINARIA PARA ESPECIES GRANDES','SE ENCARGA DE EXAMINAR ANIMALES DE UN TAMANO GRANDE, POR LO GENERAL NO DOMESTICOS.'),(3,'VETERINARIA PARA ESPECIES PEQUENAS','SE ENCARGA DE EXAMINAR ANIMALES DE UN TAMANO PEQUENO, POR LO GENERAL DOMESTICOS.'),(4,'VETERINARIA PARA ESPECIES SILVESTRES','SE ENCARGA DE EXAMINAR ANIMALES NO DOMESTICOS, POR LO GENERAL EXOTICOS.');
+/*!40000 ALTER TABLE `especializacion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `especie`
 --
 
@@ -225,9 +248,11 @@ DROP TABLE IF EXISTS `familia`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `familia` (
   `IDFamilia` int NOT NULL AUTO_INCREMENT,
-  `IDEspecie` int NOT NULL,
   `NombreFamilia` varchar(50) NOT NULL,
-  PRIMARY KEY (`IDFamilia`)
+  `IDEspecie` int DEFAULT NULL,
+  PRIMARY KEY (`IDFamilia`),
+  KEY `fk_familia_especie` (`IDEspecie`),
+  CONSTRAINT `fk_familia_especie` FOREIGN KEY (`IDEspecie`) REFERENCES `especie` (`IDEspecie`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -237,7 +262,7 @@ CREATE TABLE `familia` (
 
 LOCK TABLES `familia` WRITE;
 /*!40000 ALTER TABLE `familia` DISABLE KEYS */;
-INSERT INTO `familia` VALUES (1,3,'SERPIENTES'),(2,3,'LAGARTOS'),(3,3,'TORTUGAS'),(4,1,'PERROS'),(5,1,'GATOS'),(6,1,'ARDILLAS'),(7,2,'LOROS'),(8,2,'PERICOS'),(9,2,'PATOS');
+INSERT INTO `familia` VALUES (1,'SERPIENTES',3),(2,'LAGARTOS',3),(3,'TORTUGAS',3),(4,'PERROS',1),(5,'GATOS',1),(6,'ARDILLAS',1),(7,'LOROS',2),(8,'PERICOS',2),(9,'PATOS',2);
 /*!40000 ALTER TABLE `familia` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -250,9 +275,11 @@ DROP TABLE IF EXISTS `genero`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `genero` (
   `IDGenero` int NOT NULL AUTO_INCREMENT,
-  `IDFamilia` int NOT NULL,
   `NombreGenero` varchar(50) NOT NULL,
-  PRIMARY KEY (`IDGenero`)
+  `IDFamilia` int DEFAULT NULL,
+  PRIMARY KEY (`IDGenero`),
+  KEY `fk_genero_familia` (`IDFamilia`),
+  CONSTRAINT `fk_genero_familia` FOREIGN KEY (`IDFamilia`) REFERENCES `familia` (`IDFamilia`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -262,7 +289,7 @@ CREATE TABLE `genero` (
 
 LOCK TABLES `genero` WRITE;
 /*!40000 ALTER TABLE `genero` DISABLE KEYS */;
-INSERT INTO `genero` VALUES (1,1,'VIBORAS'),(2,2,'TARENTOLA'),(3,3,'GEOCHELONE'),(4,4,'CANIS'),(5,5,'FELIS'),(6,6,'SCIURUS VULGARIS'),(7,7,'PSITTACOIDEA'),(8,8,'MELOPSITTACUS UNDULATUS'),(9,9,'ANAS');
+INSERT INTO `genero` VALUES (1,'VIBORAS',1),(2,'TARENTOLA',2),(3,'GEOCHELONE',3),(4,'CANIS',4),(5,'FELIS',5),(6,'SCIURUS VULGARIS',6),(7,'PSITTACOIDEA',7),(8,'MELOPSITTACUS UNDULATUS',8),(9,'ANAS',9);
 /*!40000 ALTER TABLE `genero` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -276,16 +303,16 @@ DROP TABLE IF EXISTS `mascota`;
 CREATE TABLE `mascota` (
   `IDMascota` int NOT NULL AUTO_INCREMENT,
   `Nombre` varchar(20) NOT NULL,
-  `CedulaPropietario` int NOT NULL,
+  `CedulaPropietario` varchar(20) NOT NULL,
   `IDEspecie` int,
   `IDFamilia` int,
   `IDGenero` int,
-  `Fnacimiento` date,
+  `Fnacimiento` varchar(10),
   `IDSexo` int,
-  `FIngreso` date NOT NULL,
+  `FIngreso` varchar(10) NOT NULL,
   `CedulaDoctor` int,
   `IDEstadoMasc` int,
-  `FSalida` date,
+  `FSalida` varchar(10),
   `IDTipoSalidaMasc` int,
   PRIMARY KEY (`IDMascota`),
   KEY `CedulaPropietario` (`CedulaPropietario`),
@@ -304,7 +331,7 @@ CREATE TABLE `mascota` (
   CONSTRAINT `mascota_ibfk_6` FOREIGN KEY (`CedulaDoctor`) REFERENCES `doctor` (`CedulaDoctor`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mascota_ibfk_7` FOREIGN KEY (`IDEstadoMasc`) REFERENCES `estadomascota` (`IDEstadoMasc`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mascota_ibfk_8` FOREIGN KEY (`IDTipoSalidaMasc`) REFERENCES `tiposalidamascota` (`IDTSalidaMasc`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -313,6 +340,7 @@ CREATE TABLE `mascota` (
 
 LOCK TABLES `mascota` WRITE;
 /*!40000 ALTER TABLE `mascota` DISABLE KEYS */;
+INSERT INTO `mascota` VALUES (1,'Rayas',1001153936,1,5,5,'2023-05-10',1,'2023-06-21',100,1,'2023-06-22',2);
 /*!40000 ALTER TABLE `mascota` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -349,38 +377,25 @@ DROP TABLE IF EXISTS `propietario`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `propietario` (
-  `CedulaPropietario` int NOT NULL,
+  `CedulaPropietario` varchar(20) NOT NULL,
+  `Contrasena` varchar(20) NOT NULL,
   `PrimNombre` varchar(20) NOT NULL,
-  `SegNombre` varchar(20) NOT NULL,
+  `SegNombre` varchar(20) DEFAULT '',
   `PrimApellido` varchar(40) NOT NULL,
-  `SegApellido` varchar(40) NOT NULL,
-  `IDSexo` int NOT NULL,
-  `fnacimiento` varchar(10) NOT NULL,
-  `Direccion` varchar(100) NOT NULL,
-  `IDMunicipio` int NOT NULL,
-  `IDDepto` int NOT NULL,
-  `TelCel` varchar(10) NOT NULL,
-  `CorreoE` varchar(80) NOT NULL,
+  `SegApellido` varchar(40) DEFAULT '',
+  `IDSexo` int NOT NULL DEFAULT 1,
+  `Direccion` varchar(100) DEFAULT '',
+  `Municipio` varchar(40) DEFAULT '',
+  `Departamento` varchar(40) DEFAULT '',
+  `TelCel` varchar(10) DEFAULT '',
+  `CorreoE` varchar(80) DEFAULT '',
   PRIMARY KEY (`CedulaPropietario`),
-  KEY `IDDepto` (`IDDepto`),
-  KEY `IDMunicipio` (`IDMunicipio`),
   KEY `IDSexo` (`IDSexo`),
-  CONSTRAINT `propietario_ibfk_1` FOREIGN KEY (`IDDepto`) REFERENCES `departamento` (`IDDepto`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `propietario_ibfk_2` FOREIGN KEY (`IDMunicipio`) REFERENCES `municipio` (`IDMunicipio`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `propietario_ibfk_3` FOREIGN KEY (`IDSexo`) REFERENCES `sexo` (`IDSexo`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `propietario`
---
 
-LOCK TABLES `propietario` WRITE;
-/*!40000 ALTER TABLE `propietario` DISABLE KEYS */;
-/*!40000 ALTER TABLE `propietario` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `sexo`
 --
 
@@ -415,7 +430,7 @@ CREATE TABLE `tiposalidamascota` (
   `IDTSalidaMasc` int NOT NULL AUTO_INCREMENT,
   `DescripTSMasc` varchar(60) NOT NULL,
   PRIMARY KEY (`IDTSalidaMasc`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -424,9 +439,38 @@ CREATE TABLE `tiposalidamascota` (
 
 LOCK TABLES `tiposalidamascota` WRITE;
 /*!40000 ALTER TABLE `tiposalidamascota` DISABLE KEYS */;
-INSERT INTO `tiposalidamascota` VALUES (1,'TRATAMIENTO'),(2,'ALTA'),(3,'CUIDADO INTENSIVO'),(4,'CONTROL');
+INSERT INTO `tiposalidamascota` VALUES (1,'TRATAMIENTO'),(2,'ALTA'),(3,'CUIDADO INTENSIVO'),(4,'CONTROL'),(5,'FALLECIDO');
 /*!40000 ALTER TABLE `tiposalidamascota` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `usuario`
+--
+
+DROP TABLE IF EXISTS `usuario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `usuario` (
+  `CedulaEmpleado` varchar(10) NOT NULL,
+  `Usuario` varchar(60) NOT NULL,
+  `Contrasenia` varchar(80) NOT NULL,
+  `Acceso` int NOT NULL,
+  PRIMARY KEY (`CedulaEmpleado`),
+  KEY `Acceso` (`Acceso`),
+  CONSTRAINT `usuario_ibfk_2` FOREIGN KEY (`Acceso`) REFERENCES `cargo` (`IDCargo`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuario`
+--
+
+LOCK TABLES `usuario` WRITE;
+/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
+INSERT INTO `usuario` VALUES ('1001153936','tomas','12tomas34',2);
+/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
+UNLOCK TABLES;
+
 --
 -- Dumping events for database 'veterinarioelcachon'
 --
@@ -444,4 +488,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-04 12:53:29
+-- Dump completed on 2024-06-13 21:23:23

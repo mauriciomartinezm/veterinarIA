@@ -7,8 +7,8 @@ class User {
   final String segapellido;
   final int idsexo;
   final String direccion;
-  final int idmunicipio;
-  final int iddepto;
+  final String municipio;
+  final String departamento;
   final String celular;
   final String correoe;
   User(
@@ -20,8 +20,8 @@ class User {
       required this.segapellido,
       required this.idsexo,
       required this.direccion,
-      required this.idmunicipio,
-      required this.iddepto,
+      required this.municipio,
+      required this.departamento,
       required this.celular,
       required this.correoe});
 }
