@@ -190,9 +190,6 @@ class _LoginPageState extends State<LoginPage> {
               celular: response['user']['TelCel'],
               correoe: response['user']['CorreoE']);
           userProvider.login(user);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Loggeado")),
-          );
 
           Navigator.pushReplacement(
             context,

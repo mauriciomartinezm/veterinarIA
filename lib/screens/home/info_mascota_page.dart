@@ -28,42 +28,69 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
   final _tipoSalidaController = TextEditingController();
   String CedulaPropietario = '';
   int IDMascota = 0;
+  String? _selectedEspecie;
+  String? _selectedFamilia;
+  String? _selectedGenero;
+  String? _selectedSexo;
 
-  List<String> opcionesFamilia = [
-    "Serpientes",
-    "Lagartos",
-    "Tortugas",
-    "Perros",
-    "Gatos",
-    "Ardillas",
-    "Loros",
-    "Pericos",
-    "Patos",
-  ];
+  final Map<String, int> mapOpcionesFamilia = {
+    "Serpientes": 1,
+    "Lagartos": 2,
+    "Tortugas": 3,
+    "Perros": 4,
+    "Gatos": 5,
+    "Ardillas": 6,
+    "Loros": 7,
+    "Pericos": 8,
+    "Patos": 9,
+  };
+  int getIdFamilia(String opcion) {
+    return mapOpcionesFamilia[opcion] ?? 0;
+  }
 
-  final List<String> opcionesEspecie = [
-    "Mamiferos",
-    "Aves",
-    "Reptiles",
-  ];
+  final Map<String, int> mapOpcionesEspecie = {
+    "Mamiferos": 1,
+    "Aves": 2,
+    "Reptiles": 3,
+  };
 
-  final List<String> opcionesGenero = [
-    "Viboras",
-    "Tarentola",
-    "Geochelone",
-    "Canis",
-    "Felis",
-    "Scirius vulgaris",
-    "Psittacoidea",
-    "Melopsittacus undulatis",
-    "Anas",
-  ];
+  int getIdEspecie(String opcion) {
+    return mapOpcionesEspecie[opcion] ?? 0;
+  }
 
-  final List<String> opcionesSexo = [
-    "Masculino",
-    "Femenino",
-  ];
+  final Map<String, int> mapOpcionesGenero = {
+    "Viboras": 1,
+    "Tarentola": 2,
+    "Geochelone": 3,
+    "Canis": 4,
+    "Felis": 5,
+    "Scirius vulgaris": 6,
+    "Psittacoidea": 7,
+    "Melopsittacus undulatis": 8,
+    "Anas": 9,
+  };
 
+  int getIdGenero(String opcion) {
+    return mapOpcionesGenero[opcion] ?? 0;
+  }
+
+  final Map<String, int> mapOpcionesSexo = {
+    "Masculino": 1,
+    "Femenino": 2,
+  };
+
+  int getIdSexo(String opcion) {
+    return mapOpcionesSexo[opcion] ?? 0;
+  }
+
+  Map<int, String> get reverseMapOpcionesEspecie => Map.fromEntries(
+      mapOpcionesEspecie.entries.map((e) => MapEntry(e.value, e.key)));
+  Map<int, String> get reverseMapOpcionesFamilia => Map.fromEntries(
+      mapOpcionesFamilia.entries.map((e) => MapEntry(e.value, e.key)));
+  Map<int, String> get reverseMapOpcionesGenero => Map.fromEntries(
+      mapOpcionesGenero.entries.map((e) => MapEntry(e.value, e.key)));
+  Map<int, String> get reverseMapOpcionesSexo => Map.fromEntries(
+      mapOpcionesSexo.entries.map((e) => MapEntry(e.value, e.key)));
   String? _selectedImage;
 
   @override
@@ -79,11 +106,23 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
         IDMascota = pet.IDMascota;
         CedulaPropietario = pet.CedulaPropietario;
         _nombreController.text = pet.Nombre;
-        _especieController.text = pet.IDEspecie?.toString() ?? '';
-        _familiaController.text = pet.IDFamilia?.toString() ?? '';
-        _generoController.text = pet.IDGenero?.toString() ?? '';
+        _selectedEspecie = mapOpcionesEspecie.entries
+            .firstWhere((entry) => entry.value == pet.IDEspecie,
+                orElse: () => MapEntry('', 0))
+            .key;
+        _selectedFamilia = mapOpcionesFamilia.entries
+            .firstWhere((entry) => entry.value == pet.IDFamilia,
+                orElse: () => MapEntry('', 0))
+            .key;
+        _selectedGenero = mapOpcionesGenero.entries
+            .firstWhere((entry) => entry.value == pet.IDGenero,
+                orElse: () => MapEntry('', 0))
+            .key;
+        _selectedSexo = mapOpcionesSexo.entries
+            .firstWhere((entry) => entry.value == pet.IDSexo,
+                orElse: () => MapEntry('', 0))
+            .key;
         _fechaController.text = pet.Fnacimiento ?? '';
-        _sexoController.text = pet.IDSexo?.toString() ?? '';
         _fechaIngresoController.text = pet.FIngreso;
         _estadoController.text = pet.IDEstadoMasc ?? '';
         _fechaSalidaController.text = pet.FSalida ?? '';
@@ -204,21 +243,20 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
           Pet updatedPet = Pet(
             IDMascota: IDMascota,
             Nombre: _nombreController.text,
-            CedulaPropietario: '', // Ajusta según la estructura de Pet
-            IDEspecie: int.tryParse(_especieController.text),
-            IDFamilia: int.tryParse(_familiaController.text),
-            IDGenero: int.tryParse(_generoController.text),
+            CedulaPropietario: CedulaPropietario,
+            IDEspecie: mapOpcionesEspecie[_selectedEspecie] ?? 0,
+            IDFamilia: mapOpcionesFamilia[_selectedFamilia] ?? 0,
+            IDGenero: mapOpcionesGenero[_selectedGenero] ?? 0,
             Fnacimiento: _fechaController.text,
-            IDSexo: int.tryParse(_sexoController.text),
+            IDSexo: mapOpcionesSexo[_selectedSexo] ?? 0,
             FIngreso: _fechaIngresoController.text,
             IDEstadoMasc: _estadoController.text,
             FSalida: _fechaSalidaController.text,
             IDTipoSalidaMasc: _tipoSalidaController.text,
           );
-
           try {
             // Llamar al subprograma updateUser con el ID de la mascota y el objeto Pet
-            var resposne = await updateInf(IDMascota, updatedPet);
+            var response = await updateInf(IDMascota, updatedPet.toJson());
 
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("Información actualizada")),
@@ -263,76 +301,44 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
     );
   }
 
-  Widget _buildDateField(TextEditingController controller, String label,
-      {bool isEnabled = true}) {
-    DateTime? initialDate;
-    if (controller.text.isNotEmpty) {
-      try {
-        initialDate = DateFormat('yyyy-MM-dd').parse(controller.text);
-      } catch (e) {
-        print('Error parsing date: $e');
-      }
-    }
-
+  Widget _buildDateField(TextEditingController controller, String labelText) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: DateTimeFormField(
+      child: TextFormField(
+        controller: controller,
         decoration: InputDecoration(
-          labelText: label,
+          labelText: labelText,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
           filled: true,
           fillColor: Colors.white,
         ),
-        mode: DateTimeFieldPickerMode.date,
-        enabled: isEnabled,
-        dateFormat: DateFormat('yyyy-MM-dd'),
-        initialValue: initialDate,
-        firstDate: DateTime(1900),
-        lastDate: DateTime.now(),
-        onDateSelected: (DateTime value) {
-          controller.text = DateFormat('yyyy-MM-dd').format(value);
-        },
-      ),
-    );
-  }
-
-  Widget familia() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: DropdownButtonFormField<String>(
-        decoration: InputDecoration(
-          labelText: "Familia",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          filled: true,
-          fillColor: Colors.white,
-        ),
-        value:
-            _familiaController.text.isNotEmpty ? _familiaController.text : null,
-        onChanged: (String? newValue) {
-          setState(() {
-            _familiaController.text = newValue ?? '';
-          });
-        },
-        items: opcionesFamilia.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
+        readOnly: true,
+        onTap: () async {
+          DateTime? pickedDate = await showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(1900),
+            lastDate: DateTime(2100),
           );
-        }).toList(),
+
+          if (pickedDate != null) {
+            String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+            setState(() {
+              controller.text = formattedDate;
+            });
+          }
+        },
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return "Por favor seleccione una opción para la familia";
+            return 'Por favor seleccione una fecha';
           }
           return null;
         },
       ),
     );
   }
-
   Widget especie() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -345,14 +351,14 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
           filled: true,
           fillColor: Colors.white,
         ),
-        value:
-            _especieController.text.isNotEmpty ? _especieController.text : null,
+        value: _selectedEspecie,
         onChanged: (String? newValue) {
           setState(() {
-            _especieController.text = newValue ?? '';
+            _selectedEspecie = newValue;
           });
         },
-        items: opcionesEspecie.map<DropdownMenuItem<String>>((String value) {
+        items: mapOpcionesEspecie.keys
+            .map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Text(value),
@@ -380,14 +386,14 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
           filled: true,
           fillColor: Colors.white,
         ),
-        value:
-            _generoController.text.isNotEmpty ? _generoController.text : null,
+        value: _selectedGenero,
         onChanged: (String? newValue) {
           setState(() {
-            _generoController.text = newValue ?? '';
+            _selectedGenero = newValue;
           });
         },
-        items: opcionesGenero.map<DropdownMenuItem<String>>((String value) {
+        items: mapOpcionesGenero.keys
+            .map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Text(value),
@@ -408,20 +414,21 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: DropdownButtonFormField<String>(
         decoration: InputDecoration(
-          labelText: "Sexo", //por favor
+          labelText: "Sexo",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
           filled: true,
           fillColor: Colors.white,
         ),
-        value: _sexoController.text.isNotEmpty ? _sexoController.text : null,
+        value: _selectedSexo,
         onChanged: (String? newValue) {
           setState(() {
-            _sexoController.text = newValue ?? '';
+            _selectedSexo = newValue;
           });
         },
-        items: opcionesSexo.map<DropdownMenuItem<String>>((String value) {
+        items:
+            mapOpcionesSexo.keys.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Text(value),
@@ -430,6 +437,40 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
         validator: (value) {
           if (value == null || value.isEmpty) {
             return "Por favor seleccione una opción para el sexo";
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget familia() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          labelText: "Familia",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+        ),
+        value: _selectedFamilia,
+        onChanged: (String? newValue) {
+          setState(() {
+            _selectedFamilia = newValue;
+          });
+        },
+        items: mapOpcionesFamilia.keys.map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Por favor seleccione una opción para la familia";
           }
           return null;
         },

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:js_interop';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../../model/pet.dart';
@@ -70,7 +69,8 @@ Future<Map<String, dynamic>> registerPet(String nombre, String cedula) async {
   }
 }
 
-Future<Map<String, dynamic>> updateInf(int IDMascota, Pet pet) async {
+Future<Map<String, dynamic>> updateInf(int IDMascota, String pet) async {
+  print(pet);
   var url =
       Uri.parse('http://192.168.10.4:3000/updatePet/$IDMascota'); // Cambiado para emulador
   try {
@@ -78,7 +78,7 @@ Future<Map<String, dynamic>> updateInf(int IDMascota, Pet pet) async {
     var response = await http.put(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(pet),
+      body: pet,
     );
 
     // Verificar el estado de la respuesta

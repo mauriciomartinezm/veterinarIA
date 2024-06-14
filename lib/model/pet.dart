@@ -22,9 +22,9 @@ class Pet {
     required this.Fnacimiento,
     required this.IDSexo,
     required this.FIngreso,
-    required this.IDEstadoMasc,
-    required this.FSalida,
-    required this.IDTipoSalidaMasc,
+    this.IDEstadoMasc,
+    this.FSalida,
+    this.IDTipoSalidaMasc,
   });
 
   factory Pet.fromJson(Map<String, dynamic> json) {
@@ -43,4 +43,24 @@ class Pet {
       IDTipoSalidaMasc: json['IDTipoSalidaMasc'],
     );
   }
+  @override
+  String toJson() {
+  return '''
+  {
+    "IDMascota": $IDMascota,
+    "Nombre": "$Nombre",
+    "CedulaPropietario": "$CedulaPropietario",
+    "IDEspecie": $IDEspecie,
+    "IDFamilia": $IDFamilia,
+    "IDGenero": $IDGenero,
+    "Fnacimiento": "$Fnacimiento",
+    "IDSexo": $IDSexo,
+    "FIngreso": "$FIngreso",
+    "IDEstadoMasc": "$IDEstadoMasc",
+    "FSalida": "$FSalida",
+    "IDTipoSalidaMasc": "$IDTipoSalidaMasc"
+  }
+  ''';
+}
+
 }
