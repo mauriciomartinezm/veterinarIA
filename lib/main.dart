@@ -27,7 +27,7 @@ class Miapp extends StatelessWidget {
     'home': (_) => const HomePage(),
     'informacion': (_) => const InformacionPage(),
     'infoUsuario': (_) => const InfoUsuarioPage(),
-    'infoMascotas': (_) => const InfoMascotaPage(IDMascota: 1,), //? ? ?? ? ? ? 
+    'infoMascotas': (_) => const InfoMascotaPage(idMascota: 1,), //? ? ?? ? ? ? 
     'citas': (_) => const CitasPage(),
 
   };
@@ -38,7 +38,7 @@ class Miapp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Mi app",
       routes: _routes,
-      initialRoute: 'login'
+      initialRoute: 'home'
       ,
     );
   }

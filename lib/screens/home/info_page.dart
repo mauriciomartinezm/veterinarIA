@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:prueba1/screens/home/mascotas_page.dart';
-import '../../barra_inferior.dart';
 import 'info_usuario_page.dart';
 
 class InformacionPage extends StatelessWidget {
@@ -10,7 +9,6 @@ class InformacionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: cuerpo(context),
-      bottomNavigationBar: const MiBottomAppBar(disabledButton: 1), // Deshabilitar Información
     );
   }
 }

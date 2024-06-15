@@ -1,13 +1,11 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:prueba1/backend/api_services/api_pet.dart';
 import '../../model/pet.dart';
-import 'package:date_field/date_field.dart';
 import 'package:intl/intl.dart';
 
 class InfoMascotaPage extends StatefulWidget {
-  final int IDMascota;
-  const InfoMascotaPage({super.key, required this.IDMascota});
+  final int idMascota;
+  const InfoMascotaPage({super.key, required this.idMascota});
 
   @override
   State<InfoMascotaPage> createState() => _InfoMascotaPageState();
@@ -100,26 +98,26 @@ class _InfoMascotaPageState extends State<InfoMascotaPage> {
 
   Future<void> _loadPetData() async {
     try {
-      Pet pet = await getPet(widget.IDMascota);
+      Pet pet = await getPet(widget.idMascota);
       setState(() {
         IDMascota = pet.IDMascota;
         CedulaPropietario = pet.CedulaPropietario;
         _nombreController.text = pet.Nombre;
         _selectedEspecie = mapOpcionesEspecie.entries
             .firstWhere((entry) => entry.value == pet.IDEspecie,
-                orElse: () => MapEntry('', 0))
+                orElse: () => const MapEntry('', 0))
             .key;
         _selectedFamilia = mapOpcionesFamilia.entries
             .firstWhere((entry) => entry.value == pet.IDFamilia,
-                orElse: () => MapEntry('', 0))
+                orElse: () => const MapEntry('', 0))
             .key;
         _selectedGenero = mapOpcionesGenero.entries
             .firstWhere((entry) => entry.value == pet.IDGenero,
-                orElse: () => MapEntry('', 0))
+                orElse: () => const MapEntry('', 0))
             .key;
         _selectedSexo = mapOpcionesSexo.entries
             .firstWhere((entry) => entry.value == pet.IDSexo,
-                orElse: () => MapEntry('', 0))
+                orElse: () => const MapEntry('', 0))
             .key;
         _fechaController.text = pet.Fnacimiento ?? '';
         _fechaIngresoController.text = pet.FIngreso;
