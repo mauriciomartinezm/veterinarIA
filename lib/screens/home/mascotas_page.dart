@@ -138,7 +138,7 @@ class _MascotasPageState extends State<MascotasPage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => InfoMascotaPage(
-                    IDMascota: mascotas[index]['id'],
+                    idMascota: mascotas[index]['id'],
                   ),
                 ),
               );
@@ -162,7 +162,7 @@ class AddMascotaDialog extends StatefulWidget {
   final Function(String, int) addMascota;
   final String cedula;
 
-  const AddMascotaDialog({required this.addMascota, required this.cedula});
+  const AddMascotaDialog({super.key, required this.addMascota, required this.cedula});
 
   @override
   _AddMascotaDialogState createState() => _AddMascotaDialogState();
