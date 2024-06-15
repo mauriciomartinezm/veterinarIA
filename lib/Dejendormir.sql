@@ -104,7 +104,7 @@ DROP TABLE IF EXISTS `doctor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `doctor` (
-  `CedulaDoctor` int NOT NULL,
+  `CedulaDoctor` varchar(15),
   `CedulaEmpleado` int NOT NULL,
   PRIMARY KEY (`CedulaDoctor`),
   KEY `CedulaEmpleado` (`CedulaEmpleado`)
@@ -457,6 +457,21 @@ LOCK TABLES `usuario` WRITE;
 INSERT INTO `usuario` VALUES ('1001153936','tomas','12tomas34',2);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
+
+DROP TABLE IF EXISTS horario;
+CREATE TABLE `horario` (
+  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+  `dia` varchar(10) NOT NULL,
+  `hora` varchar(10) NOT NULL,
+  `estado` varchar(10) NOT NULL,
+  `cedula_doctor` varchar(10) NOT NULL,
+  `cedula_propietario` varchar(10) NOT NULL,
+  `id_mascota` int NOT NULL,
+  FOREIGN KEY (`cedula_doctor`) REFERENCES `doctor` (`CedulaDoctor`),
+  FOREIGN KEY (`cedula_propietario`) REFERENCES `propietario` (`CedulaPropietario`),
+  FOREIGN KEY (`id_mascota`) REFERENCES `mascota` (`IDMascota`)
+);
+
 
 --
 -- Dumping events for database 'veterinarioelcachon'
