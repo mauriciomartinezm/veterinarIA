@@ -2,20 +2,26 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 Future<Map<String, dynamic>> updateInf(
-   String? cedula,
-   String contrasena,
-   String primNombre,
-   String segNombre,
-   String primApellido,
-   String segApellido,
-   String idSexo,
-   String direccion,
-   String municipio,
-   String departamento,
-   String telCel,
-   String correoE,
+  String? cedula,
+  String contrasena,
+  String primNombre,
+  String segNombre,
+  String primApellido,
+  String segApellido,
+  String idSexo,
+  String direccion,
+  String municipio,
+  String departamento,
+  String telCel,
+  String correoE,
 ) async {
-  var url = Uri.parse('https://veterinariaapi-2.onrender.com/updateUser/$cedula');
+  int IDSexo = 2;
+
+  if (idSexo == "Masculino") {
+    IDSexo = 1;
+  }
+  var url =
+      Uri.parse('https://veterinariaapi-2.onrender.com/updateUser/$cedula');
 
   try {
     var response = await http.put(
@@ -28,7 +34,7 @@ Future<Map<String, dynamic>> updateInf(
         'SegNombre': segNombre,
         'PrimApellido': primApellido,
         'SegApellido': segApellido,
-        'IDSexo': idSexo,
+        'IDSexo': IDSexo,
         'Direccion': direccion,
         'Departamento': departamento,
         'Municipio': municipio,
@@ -49,9 +55,10 @@ Future<Map<String, dynamic>> updateInf(
     return {'messageFail': 'Error de conexión'};
   }
 }
+
 Future<Map<String, dynamic>> getUser(String? CedulaPropietario) async {
-  var url =
-      Uri.parse('https://veterinariaapi-2.onrender.com/getUser/$CedulaPropietario'); // Cambiado para emulador
+  var url = Uri.parse(
+      'https://veterinariaapi-2.onrender.com/getUser/$CedulaPropietario'); // Cambiado para emulador
 
   try {
     // Enviar la solicitud POST con cedula y contrasenia en el cuerpo
@@ -77,8 +84,8 @@ Future<Map<String, dynamic>> getUser(String? CedulaPropietario) async {
 }
 
 Future<Map<String, dynamic>> loginUser(String cedula, String contrasena) async {
-  var url =
-      Uri.parse('https://veterinariaapi-2.onrender.com/login'); // Cambiado para emulador
+  var url = Uri.parse(
+      'https://veterinariaapi-2.onrender.com/login'); // Cambiado para emulador
 
   try {
     // Enviar la solicitud POST con cedula y contrasenia en el cuerpo

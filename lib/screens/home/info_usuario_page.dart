@@ -6,6 +6,25 @@ import '../../model/user.dart';
 import 'package:http/http.dart' as http;
 import '../../api_services/api_client.dart';
 
+class SexoOption {
+  final int id;
+  final String text;
+
+  SexoOption(this.id, this.text);
+
+  static SexoOption? fromId(int id) {
+    if (id == 1) {
+      return SexoOption(1, 'Masculino');
+    } else if (id == 2) {
+      return SexoOption(2, 'Femenino');
+    } else if (id == 3) {
+      return SexoOption(3, '39 tipos de gay');
+    } else {
+      return null; // Manejar casos adicionales según sea necesario
+    }
+  }
+}
+
 class InfoUsuarioPage extends StatefulWidget {
   const InfoUsuarioPage({Key? key}) : super(key: key);
 
@@ -55,7 +74,13 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
     _municipioController = TextEditingController(text: user?.municipio ?? '');
     _celularController = TextEditingController(text: user?.celular ?? '');
     _correoController = TextEditingController(text: user?.correoe ?? '');
-
+// Buscar y seleccionar automáticamente el sexo correspondiente
+    if (user?.idsexo != null) {
+      SexoOption? selectedSexo = SexoOption.fromId(user!.idsexo);
+      if (selectedSexo != null) {
+        _sexoController = TextEditingController(text: selectedSexo.text);
+      }
+    }
     _fetchDepartamentos().then((_) {
       if (user?.departamento != null) {
         _departamentoController.text = user!.departamento;
@@ -349,7 +374,7 @@ class _InfoUsuarioPageState extends State<InfoUsuarioPage> {
           );
         }
       },
-      child: const Text('Actualizar', style: TextStyle(fontSize: 16)),
+      child: const Text('Actualizar', style: TextStyle(fontSize: 12)),
     );
   }
 
