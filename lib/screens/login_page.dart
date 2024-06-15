@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prueba1/screens/home/home_page.dart';
 import 'register_page.dart';
-import 'package:prueba1/backend/api_services/api_client.dart';
+import '/api_services/api_client.dart';
 import 'package:provider/provider.dart';
 import '../provider/userProvider.dart';
 import '../model/user.dart';

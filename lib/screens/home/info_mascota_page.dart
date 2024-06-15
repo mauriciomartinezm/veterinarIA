@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:prueba1/backend/api_services/api_pet.dart';
+import '../../api_services/api_pet.dart';
 import '../../model/pet.dart';
-import 'package:date_field/date_field.dart';
 import 'package:intl/intl.dart';
 
 class InfoMascotaPage extends StatefulWidget {

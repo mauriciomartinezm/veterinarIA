@@ -4,7 +4,7 @@ import '../../provider/userProvider.dart';
 import 'dart:convert';
 import '../../model/user.dart';
 import 'package:http/http.dart' as http;
-import '../../backend/api_services/api_client.dart';
+import '../../api_services/api_client.dart';
 
 class InfoUsuarioPage extends StatefulWidget {
   const InfoUsuarioPage({Key? key}) : super(key: key);

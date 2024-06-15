@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../backend/api_services/api_cita.dart';
+import '../../api_services/api_cita.dart';
 import '../../provider/userProvider.dart';
 import 'package:provider/provider.dart';
-import '../../backend/api_services/api_pet.dart';
+import '../../api_services/api_pet.dart';
 
 class CitasPage extends StatefulWidget {
   const CitasPage({super.key});

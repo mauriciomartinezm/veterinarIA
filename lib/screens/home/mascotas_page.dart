@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'info_mascota_page.dart'; // Importa la página de información de la mascota
-import '../../backend/api_services/api_pet.dart';
+import '../../api_services/api_pet.dart';
 import 'package:provider/provider.dart';
 import '../../provider/userProvider.dart';
 
