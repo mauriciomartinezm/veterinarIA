@@ -61,8 +61,8 @@ Widget superior(BuildContext context) {
 
 Widget saludo(BuildContext context) {
   var userProvider = Provider.of<UserProvider>(context);
-  // var user = userProvider.user;
-  // String nombre = user!.primnombre;
+   var user = userProvider.user;
+   String nombre = user!.primnombre;
 
   return Positioned(
     left: 30,
@@ -75,8 +75,8 @@ Widget saludo(BuildContext context) {
           style: TextStyle(fontSize: 25),
         ),
         Text(
-          "Guapo",
-          // nombre,
+          //"Guapo",
+           nombre,
           style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
         const Text(

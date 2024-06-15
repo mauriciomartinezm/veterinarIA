@@ -49,15 +49,17 @@ DROP TABLE IF EXISTS `cita`;
 CREATE TABLE `cita` (
   `IDCita` int NOT NULL AUTO_INCREMENT,
   `IDMascota` int NOT NULL,
-  `FechaCita` varchar(10) NOT NULL,
-  `HoraCita` varchar(5) NOT NULL,
+  `IDHorario` int NOT NULL,
   `ProceProgramado` varchar(80) DEFAULT NULL,
   `Observaciones` varchar(140) DEFAULT NULL,
   `Propietario` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`IDCita`),
   KEY `IDMascota` (`IDMascota`),
+  KEY `IDHorario` (`IDHorario`),
   KEY `fk_propietario_Cedulapropietario` (`Propietario`),
+  
   CONSTRAINT `cita_ibfk_1` FOREIGN KEY (`IDMascota`) REFERENCES `mascota` (`IDMascota`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `cita_ibfk_2` FOREIGN KEY (`IDMascota`) REFERENCES `horario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_propietario_Cedulapropietario` FOREIGN KEY (`Propietario`) REFERENCES `propietario` (`CedulaPropietario`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -65,13 +67,6 @@ CREATE TABLE `cita` (
 --
 -- Dumping data for table `cita`
 --
-
-LOCK TABLES `cita` WRITE;
-/*!40000 ALTER TABLE `cita` DISABLE KEYS */;
-INSERT INTO `cita` VALUES (1,1,'2023-07-02','09:15','Capar a ese hp gato','',1001153936);
-/*!40000 ALTER TABLE `cita` ENABLE KEYS */;
-UNLOCK TABLES;
-
 --
 -- Table structure for table `departamento`
 --
@@ -462,16 +457,24 @@ DROP TABLE IF EXISTS horario;
 CREATE TABLE `horario` (
   `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY, 
   `dia` varchar(10) NOT NULL,
-  `hora` varchar(10) NOT NULL,
-  `estado` varchar(10) NOT NULL,
-  `cedula_doctor` varchar(10) NOT NULL,
-  `cedula_propietario` varchar(10) NOT NULL,
-  `id_mascota` int NOT NULL,
-  FOREIGN KEY (`cedula_doctor`) REFERENCES `doctor` (`CedulaDoctor`),
-  FOREIGN KEY (`cedula_propietario`) REFERENCES `propietario` (`CedulaPropietario`),
-  FOREIGN KEY (`id_mascota`) REFERENCES `mascota` (`IDMascota`)
+  `hora` time NOT NULL,
+  `estado` varchar(10) NOT NULL DEFAULT 'Libre'
 );
 
+INSERT INTO `horario` (`dia`, `hora`, `estado`)
+VALUES 
+('Lunes', '08:00:00', 'Libre'),
+('Lunes', '09:00:00', 'Libre'),
+('Lunes', '10:00:00', 'Libre'),
+('Lunes', '11:00:00', 'Libre'),
+('Lunes', '12:00:00', 'Libre'),
+('Lunes', '14:00:00', 'Libre'),
+('Lunes', '15:00:00', 'Libre'),
+('Martes', '08:00:00', 'Libre'),
+('Martes', '09:00:00', 'Libre'),
+('Martes', '10:00:00', 'Libre'),
+('Martes', '11:00:00', 'Libre'),
+('Martes', '12:00:00', 'Libre');
 
 --
 -- Dumping events for database 'veterinarioelcachon'

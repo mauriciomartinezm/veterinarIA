@@ -179,7 +179,6 @@ class _AddMascotaDialogState extends State<AddMascotaDialog> {
         _errorMessage = 'Ingrese el nombre de la mascota';
       });
     } else {
-      print("hola");
       var response = await registerPet(nombre, widget.cedula);
 
       if (response.containsKey('existingPet')) {
